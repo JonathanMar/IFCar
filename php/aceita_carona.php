@@ -1,17 +1,21 @@
 <?php
+echo "<script>console.log('Registro atualizado com sucesso PT3.');</script>";
 try {
  include('connection.php');
 
- $cod = $_POST["cod"];
- $aceita = $_POST["aceita"];
+ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
- $stmt = $db->prepare("UPDATE caronas SET aceita = :aceita WHERE cod = :cod");
- $stmt->bindParam(':aceita', $novoValor);
- $stmt->bindParam(':cod', $idRegistro);
+  $cod = $_POST["cod"];
+  $aceita = $_POST["aceita"];
 
- $stmt->execute();
+  $stmt = $db->prepare("UPDATE caronas SET aceita = :aceita WHERE cod = :cod");
+  $stmt->bindParam(':aceita', $novoValor);
+  $stmt->bindParam(':cod', $idRegistro);
 
- echo "Registro atualizado com sucesso PT2";
+  $stmt->execute();
+
+  echo "<script>console.log('Registro atualizado com sucesso PT4.');</script>";
+ }
 } catch (PDOException $e) {
   echo "Erro ao atualizar o registro: " . $e->getMessage();
 } catch (Exception $e) {

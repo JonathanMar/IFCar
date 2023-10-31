@@ -2,7 +2,7 @@
 $host = 'localhost';
 $dbname = 'ifcar';
 $user = 'postgres';
-$password = 'Mnejet15+EenIF';
+$password = '1234567';
 
 try {
     $db = new PDO("pgsql:host=$host;dbname=$dbname;user=$user;password=$password");

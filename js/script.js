@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (btn_aceita_carona) {
           btn_aceita_carona.addEventListener('click', function () {
             var idDoRegistro = btn_aceita_carona.dataset.id;
+            var aceita = 1;
 
             var xhrAtualizacao = new XMLHttpRequest();
             xhrAtualizacao.open('POST', 'php/aceita_carona.php', true);
@@ -39,7 +40,6 @@ document.addEventListener('DOMContentLoaded', function () {
             xhrAtualizacao.onload = function () {
               if (xhrAtualizacao.status >= 200 && xhrAtualizacao.status < 400) {
                 console.log('Registro atualizado com sucesso PT1.');
-                var aceita = 1;
               } else {
                 console.error('Erro ao atualizar o registro.');
               }
@@ -49,7 +49,13 @@ document.addEventListener('DOMContentLoaded', function () {
               console.error('Erro de conexão ao atualizar o registro.');
             };
 
-            xhrAtualizacao.send('cod&aceita=' + encodeURIComponent(idDoRegistro));
+            try {
+              xhrAtualizacao.send('cod=' + encodeURIComponent(idDoRegistro) + '&aceita=' + encodeURIComponent(aceita));
+              console.log('Requisição enviada com sucesso PT1.5.');
+            } catch (error) {
+              console.error('Erro ao enviar requisição: ' + error);
+            }
+
           });
         } else {
           console.error('Erro ao carregar o formulário.');
