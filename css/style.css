@@ -4,3 +4,11 @@
     box-sizing: border-box;
 }
 
+#lista_carona {
+    background-color: #424242;
+}
+
+.carona-item {
+    padding: 10px;
+    margin-bottom: 10px;
+}

@@ -1,46 +1,68 @@
 document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('dar_carona').addEventListener('click', function () {
-    var xhr = new XMLHttpRequest(); // Cria um objeto XMLHttpRequest
-    xhr.open('GET', 'formulario_cadastro.html', true); // Especifique o arquivo que contém o formulário
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'formulario_cadastro.html', true);
 
     xhr.onload = function () {
       if (xhr.status >= 200 && xhr.status < 400) {
-        // O pedido foi bem-sucedido; aqui você pode manipular a resposta
-        document.getElementById('formulario').innerHTML = xhr.responseText; // Atualize o elemento com o formulário
+        document.getElementById('formulario').innerHTML = xhr.responseText;
       } else {
-        // O servidor retornou um erro
         console.error('Erro ao carregar o formulário.');
       }
     };
 
-    xhr.onerror = function () { 
-      // Houve um erro de conexão
+    xhr.onerror = function () {
       console.error('Erro de conexão.');
     };
 
-    xhr.send(); // Envia a requisição
+    xhr.send();
   });
 
   document.getElementById('pegar_carona').addEventListener('click', function () {
-    var xhr = new XMLHttpRequest(); // Cria um objeto XMLHttpRequest
-    xhr.open('GET', 'pegar_carona.html', true); // Especifique o arquivo que contém o formulário
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'php/mostra_carona.php', true);
 
     xhr.onload = function () {
       if (xhr.status >= 200 && xhr.status < 400) {
-        // O pedido foi bem-sucedido; aqui você pode manipular a resposta
-        document.getElementById('lista_carona').innerHTML = xhr.responseText; // Atualize o elemento com o formulário
+        document.getElementById('lista_carona').innerHTML = xhr.responseText;
+
+        var btn_aceita_carona = document.getElementById('aceitar_carona');
+
+        if (btn_aceita_carona) {
+          btn_aceita_carona.addEventListener('click', function () {
+            var idDoRegistro = btn_aceita_carona.dataset.id;
+
+            var xhrAtualizacao = new XMLHttpRequest();
+            xhrAtualizacao.open('POST', 'php/aceita_carona.php', true);
+            xhrAtualizacao.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+
+            xhrAtualizacao.onload = function () {
+              if (xhrAtualizacao.status >= 200 && xhrAtualizacao.status < 400) {
+                console.log('Registro atualizado com sucesso PT1.');
+                var aceita = 1;
+              } else {
+                console.error('Erro ao atualizar o registro.');
+              }
+            };
+
+            xhrAtualizacao.onerror = function () {
+              console.error('Erro de conexão ao atualizar o registro.');
+            };
+
+            xhrAtualizacao.send('cod&aceita=' + encodeURIComponent(idDoRegistro));
+          });
+        } else {
+          console.error('Erro ao carregar o formulário.');
+        }
       } else {
-        // O servidor retornou um erro
-        console.error('Erro ao carregar o formulário.');
+        console.error('Erro ao carregar a lista de caronas.');
       }
     };
 
-    xhr.onerror = function () { 
-      // Houve um erro de conexão
+    xhr.onerror = function () {
       console.error('Erro de conexão.');
     };
 
-    xhr.send(); // Envia a requisição
+    xhr.send();
   });
-
 });
