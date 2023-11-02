@@ -62,7 +62,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             xhrAtualizacao.onload = function () {
               if (xhrAtualizacao.status >= 200 && xhrAtualizacao.status < 400) {
-                console.log('Registro atualizado com sucesso PT1.');
               } else {
                 console.error('Erro ao atualizar o registro.');
               }
@@ -85,5 +84,11 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     xhr.send();
+
+    document.getElementById('btn_voltar').addEventListener('click', function() {
+      var lista_carona = document.getElementById('lista_carona');
+      console.error('LIMPAR.');
+      lista_carona.innerHTML = '';
+    }); 
   });
 });

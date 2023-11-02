@@ -9,11 +9,12 @@ try {
     if ($result) {
         foreach ($result as $row) {
             echo "<div class='carona-item'>"; 
-            echo "Endereço: " . $row['endereco'] . ", Hora: " . $row['hora'];
-            echo "<div class='button'>";
-            echo "<button class='aceitar_carona' data-id='" . $row['cod'] . "'> Aceitar Carona </button>";
-            echo "COD: " . $row['cod'] . " ";
-            echo "</div>";
+                echo "Endereço: " . $row['endereco'] . ", Hora: " . $row['hora'];
+                echo "<div class='button'>";
+                    echo "<button class='aceitar_carona' data-id='" . $row['cod'] . "'> Aceitar Carona </button>";
+                echo "COD: " . $row['cod'] . " ";
+                echo "</div>";
+                echo "<button type='button' id='btn_voltar'>Voltar</button>";
             echo '</div>';         }
     } else {
         echo "Nenhuma carona existente no momento!";
