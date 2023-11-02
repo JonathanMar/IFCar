@@ -8,10 +8,11 @@ try {
 
     if ($result) {
         foreach ($result as $row) {
-            echo "<div class='carona-item' data-id='" . $row['cod'] . "'>"; 
+            echo "<div class='carona-item'>"; 
             echo "Endereço: " . $row['endereco'] . ", Hora: " . $row['hora'];
             echo "<div class='button'>";
-            echo "<button id='aceitar_carona'> Aceitar Carona </button>";
+            echo "<button class='aceitar_carona' data-id='" . $row['cod'] . "'> Aceitar Carona </button>";
+            echo "COD: " . $row['cod'] . " ";
             echo "</div>";
             echo '</div>';         }
     } else {

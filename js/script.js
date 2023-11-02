@@ -6,8 +6,31 @@ document.addEventListener('DOMContentLoaded', function () {
     xhr.onload = function () {
       if (xhr.status >= 200 && xhr.status < 400) {
         document.getElementById('formulario').innerHTML = xhr.responseText;
+
+        document.getElementById('form_cadastro').addEventListener('submit', function(event) {
+          event.preventDefault(); 
+
+          var formData = new FormData(this); 
+
+          var xhrCadastro = new XMLHttpRequest();
+          xhrCadastro.open('POST', 'php/cadastra_carona.php', true);
+
+          xhrCadastro.onload = function () {
+            if (xhrCadastro.status >= 200 && xhrCadastro.status < 400) {
+              console.log('Carona cadastrada com sucesso.');
+            } else {
+              console.error('Erro ao cadastrar a carona.');
+            }
+          };
+
+          xhrCadastro.onerror = function () {
+            console.error('Erro de conexão ao cadastrar a carona.');
+          };
+
+          xhrCadastro.send(formData);
+        });
       } else {
-        console.error('Erro ao carregar o formulário.');
+        console.error('Erro ao carregar o formulário. Motivo: ' + xhr.statusText);
       }
     };
 
@@ -26,11 +49,11 @@ document.addEventListener('DOMContentLoaded', function () {
       if (xhr.status >= 200 && xhr.status < 400) {
         document.getElementById('lista_carona').innerHTML = xhr.responseText;
 
-        var btn_aceita_carona = document.getElementById('aceitar_carona');
+        var btn_aceita_carona = document.getElementsByClassName('aceitar_carona');
 
-        if (btn_aceita_carona) {
-          btn_aceita_carona.addEventListener('click', function () {
-            var idDoRegistro = btn_aceita_carona.dataset.id;
+        for (var i = 0; i < btn_aceita_carona.length; i++) {
+          btn_aceita_carona[i].addEventListener('click', function () {
+            var idDoRegistro = this.dataset.id;
             var aceita = 1;
 
             var xhrAtualizacao = new XMLHttpRequest();
@@ -49,16 +72,8 @@ document.addEventListener('DOMContentLoaded', function () {
               console.error('Erro de conexão ao atualizar o registro.');
             };
 
-            try {
-              xhrAtualizacao.send('cod=' + encodeURIComponent(idDoRegistro) + '&aceita=' + encodeURIComponent(aceita));
-              console.log('Requisição enviada com sucesso PT1.5.');
-            } catch (error) {
-              console.error('Erro ao enviar requisição: ' + error);
-            }
-
+            xhrAtualizacao.send('cod=' + encodeURIComponent(idDoRegistro) + '&aceita=' + encodeURIComponent(aceita));
           });
-        } else {
-          console.error('Erro ao carregar o formulário.');
         }
       } else {
         console.error('Erro ao carregar a lista de caronas.');
