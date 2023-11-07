@@ -10,15 +10,19 @@ try {
         foreach ($result as $row) {
             echo "<div class='carona-item'>"; 
                 echo "Endereço: " . $row['endereco'] . ", Hora: " . $row['hora'];
-                echo "<div class='button'>";
+                echo "<div>";
                     echo "<button class='aceitar_carona' data-id='" . $row['cod'] . "'> Aceitar Carona </button>";
-                echo "COD: " . $row['cod'] . " ";
+                    echo "Quantidade de pessoas: " . $row['aceita'] . ".";
+                    echo "COD: " . $row['cod'] . " ";
                 echo "</div>";
-                echo "<button type='button' id='btn_voltar'>Voltar</button>";
-            echo '</div>';         }
+            echo '</div>';
+        }
     } else {
         echo "Nenhuma carona existente no momento!";
     }
+
+    echo "<button id='btn_voltar'>Voltar</button>";
+
 } catch (PDOException $e) {
     echo "Erro na conexão: " . $e->getMessage();
 } catch (Exception $e) {
