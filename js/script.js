@@ -12,8 +12,12 @@ document.addEventListener('DOMContentLoaded', function () {
           event.preventDefault();
 
           var formData = new FormData(this);
-
           var xhrCadastro = new XMLHttpRequest();
+
+          // Obtém a data atual do navegador
+          var dataAtual = new Date();
+          formData.append('data_cad', dataAtual.toISOString().split('T')[0]);
+
           xhrCadastro.open('POST', 'php/cadastra_carona.php', true);
 
           xhrCadastro.onload = function () {
@@ -21,7 +25,6 @@ document.addEventListener('DOMContentLoaded', function () {
               var xhrresponse = new XMLHttpRequest();
               xhrresponse.open('GET', 'src/msg_correct.html', true);
 
-              console.log('Carona cadastrada com sucesso.');
             } else {
               console.error('Erro ao cadastrar a carona.');
             }
