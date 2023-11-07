@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
+  var pegarCaronaInterval;
+
   // Função para dar carona
   function darCarona() {
     var xhrDarCarona = new XMLHttpRequest();
@@ -59,7 +61,6 @@ document.addEventListener('DOMContentLoaded', function () {
   // Função para pegar carona
   function pegarCarona() {
     function atualizarCaronas() {
-      var pegarCaronaInterval;
       var xhrPegarCarona = new XMLHttpRequest();
       xhrPegarCarona.open('GET', 'php/mostra_carona.php', true);
 
