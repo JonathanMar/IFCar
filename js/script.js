@@ -1,9 +1,15 @@
 document.addEventListener('DOMContentLoaded', function () {
-  var pegarCaronaInterval;
+  let pegarCaronaInterval; // letiável para a atualização da lista de carona.
+  // letiáveis para ocultar botões
+  let pegarCaronaButton = document.getElementById('pegar_carona'); 
+  let darCaronaButton = document.getElementById('dar_carona');
+
 
   // Função para dar carona
   function darCarona() {
-    var xhrDarCarona = new XMLHttpRequest();
+    pegarCaronaButton.style.display = 'none'; // Oculta o botão "Pegar Carona"
+
+    let xhrDarCarona = new XMLHttpRequest();
     xhrDarCarona.open('GET', 'src/formulario_cadastro.html', true);
 
     xhrDarCarona.onload = function () {
@@ -13,18 +19,18 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('form_cadastro').addEventListener('submit', function (event) {
           event.preventDefault();
 
-          var formData = new FormData(this);
-          var xhrCadastro = new XMLHttpRequest();
+          let formData = new FormData(this);
+          let xhrCadastro = new XMLHttpRequest();
 
           // Obtém a data atual do navegador
-          var dataAtual = new Date();
+          let dataAtual = new Date();
           formData.append('data_cad', dataAtual.toISOString().split('T')[0]);
 
           xhrCadastro.open('POST', 'php/cadastra_carona.php', true);
 
           xhrCadastro.onload = function () {
             if (xhrCadastro.status >= 200 && xhrCadastro.status < 400) {
-              var xhrresponse = new XMLHttpRequest();
+              let xhrresponse = new XMLHttpRequest();
               xhrresponse.open('GET', 'src/msg_correct.html', true);
 
             } else {
@@ -44,6 +50,9 @@ document.addEventListener('DOMContentLoaded', function () {
         // Adiciona evento de clique ao botão "Voltar"
         document.getElementById('voltar').addEventListener('click', function () {
           document.getElementById('formulario_cad').innerHTML = '';
+
+          // Exibe o botão "Pegar Carona"
+          pegarCaronaButton.style.display = 'block';
         });
 
       } else {
@@ -60,22 +69,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Função para pegar carona
   function pegarCarona() {
+    // // Oculta o botão "Dar Carona"
+    darCaronaButton.style.display = 'none';
+
     function atualizarCaronas() {
-      var xhrPegarCarona = new XMLHttpRequest();
+      let xhrPegarCarona = new XMLHttpRequest();
       xhrPegarCarona.open('GET', 'php/mostra_carona.php', true);
 
       xhrPegarCarona.onload = function () {
         if (xhrPegarCarona.status >= 200 && xhrPegarCarona.status < 400) {
           document.getElementById('lista_carona').innerHTML = xhrPegarCarona.responseText;
 
-          var btn_aceita_carona = document.getElementsByClassName('aceitar_carona');
+          let btn_aceita_carona = document.getElementsByClassName('aceitar_carona');
 
-          for (var i = 0; i < btn_aceita_carona.length; i++) {
+          for (let i = 0; i < btn_aceita_carona.length; i++) {
             btn_aceita_carona[i].addEventListener('click', function () {
-              var idDoRegistro = this.dataset.id;
-              var aceita = 1;
+              let idDoRegistro = this.dataset.id;
+              let aceita = 1;
 
-              var xhrCaronaAceita = new XMLHttpRequest();
+              let xhrCaronaAceita = new XMLHttpRequest();
               xhrCaronaAceita.open('POST', 'php/aceita_carona.php', true);
               xhrCaronaAceita.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 
@@ -100,6 +112,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Cancela o intervalo de atualização
             clearInterval(pegarCaronaInterval);
+
+            // Exibe o botão "Pegar Carona"
+            darCaronaButton.style.display = "block";
           });
 
         } else {
@@ -121,6 +136,6 @@ document.addEventListener('DOMContentLoaded', function () {
     pegarCaronaInterval = setInterval(atualizarCaronas, 2000);
   }
   // Adiciona eventos aos botões
-  document.getElementById('dar_carona').addEventListener('click', darCarona);
-  document.getElementById('pegar_carona').addEventListener('click', pegarCarona);
+  darCaronaButton.addEventListener('click', darCarona);
+  pegarCaronaButton.addEventListener('click', pegarCarona);
 });
