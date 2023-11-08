@@ -1,30 +1,29 @@
 <?php
+
 try {
     include('connection.php');
+    include('queries.php');
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $endereco = $_POST['endereco'];
-        $hora = $_POST['hora'];
-        $quant_max = $_POST['quant_max'];
-        $data_cad = $_POST['data_cad'];
+        $address_ride = $_POST['address_ride'];
+        $time_ride = $_POST['time_ride'];
+        $max_quant_ride = $_POST['max_quant_ride'];
+        $date_ride = $_POST['date_ride'];
+
+        // var_dump($_POST); // Debug
 
         // Verifica se a carona já existe
-        $stmt = $db->prepare("SELECT * FROM caronas WHERE endereco = :endereco AND hora = :hora AND quant_max = :quant_max AND data_cad = :data_cad");
-        $stmt->bindParam(':endereco', $endereco);
-        $stmt->bindParam(':hora', $hora);
-        $stmt->bindParam(':quant_max', $quant_max);
-        $stmt->bindParam(':data_cad', $data_cad);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = checkIfRideExists($db, $address_ride, $time_ride, $max_quant_ride, $date_ride);
 
         if ($result) {
             echo "Esta carona já existe.";
+
+            // echo "<div class=\'return'>";
+            //     echo "Está carona já foi cadastrada!";
+            // echo "</div>";
         } else {
-            $stmt = $db->prepare("INSERT INTO caronas (endereco, hora, quant_max) VALUES (:endereco, :hora, :quant_max)");
-            $stmt->bindParam(':endereco', $endereco);
-            $stmt->bindParam(':hora', $hora);
-            $stmt->bindParam(':quant_max', $quant_max);
-            $stmt->execute();
+            // Insere a carona no banco de dados
+            insertRide($db, $address_ride, $time_ride, $max_quant_ride, $date_ride);
         }
     }
 } catch (PDOException $e) {

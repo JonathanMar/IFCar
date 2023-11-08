@@ -1,29 +1,28 @@
 <?php
 try {
     include('connection.php');
+    include('queries.php');
 
-    $stmt = $db->prepare("SELECT * FROM caronas");
-    $stmt->execute();
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $result = getAllRides($db);
 
     if ($result) {
         foreach ($result as $row) {
-            $total_vagas = $row['quant_max'] - $row['aceita'];
-            if ($total_vagas > 0) {
+            $max_quant_ride = $row['max_quant_ride'] - $row['accepted_ride'];
+            if ($max_quant_ride > 0) {
             echo "<div class='carona-item'>"; 
-                echo "Endereço: " . $row['endereco'] . ", Horario: " . substr($row['hora'], 0, 5);
+                echo "Endereço: " . $row['address_ride'] . ", Horario: " . substr($row['time_ride'], 0, 5);
                 echo "<div>";
-                echo "Quantidade de Vagas: " . $total_vagas . ".";
-                echo "<button class='aceitar_carona' data-id='" . $row['cod'] . "'> Aceitar Carona </button>";
-                    // echo "COD: " . $row['cod'] . " "; Mostra o código de cada registro (Debug)
+                echo "Quantidade de Vagas: " . $max_quant_ride . ".";
+                echo "<button class='accepted_rider_carona' data-id='" . $row['cod_ride'] . "'> Aceitar Carona </button>";
+                    // echo "cod_ride: " . $row['cod_ride'] . " "; Mostra o código de cada registro (Debug)
                 echo "</div>";
             echo '</div>';
         } else {
             echo "<div class='carona-item'>"; 
-            echo "Endereço: " . $row['endereco'] . ", Horario: " . substr($row['hora'], 0, 5);
+            echo "Endereço: " . $row['address_ride'] . ", Horario: " . substr($row['time_ride'], 0, 5);
             echo "<div>";
             echo "<p>Todas as vagas desta carrona estão ocupadas!<p>";
-                // echo "COD: " . $row['cod'] . " "; Mostra o código de cada registro (Debug)
+                // echo "cod_ride: " . $row['cod_ride'] . " "; Mostra o código de cada registro (Debug)
             echo "</div>";
         echo '</div>';
             

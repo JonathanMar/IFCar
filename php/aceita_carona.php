@@ -1,26 +1,25 @@
 <?php
 try {
     include('connection.php');
+    include('queries.php');
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $cod_ride = $_POST["cod_ride"];
 
-        $cod = $_POST["cod"];
+        $result = acceptedRide($db, $cod_ride);
 
-        $stmt_select = $db->prepare("SELECT aceita FROM caronas WHERE cod = :cod");
-        $stmt_select->bindParam(':cod', $cod);
-        $stmt_select->execute();
-        $row = $stmt_select->fetch(PDO::FETCH_ASSOC);
+        foreach ($result as $row) {
+            $aceita = $row['accepted_ride'] + 1;
+            if ($result) {
+                $stmt_update = $db->prepare("UPDATE rides_tb SET accepted_ride = :accepted_ride WHERE cod_ride = :cod_ride");
+                $stmt_update->bindParam(':accepted_ride', $accepted_ride);
+                $stmt_update->bindParam(':cod_ride', $cod_ride);
+                $stmt_update->execute();
 
-        if ($row) {
-            $aceita = $row['aceita'] + 1;
-            $stmt_update = $db->prepare("UPDATE caronas SET aceita = :aceita WHERE cod = :cod");
-            $stmt_update->bindParam(':aceita', $aceita);
-            $stmt_update->bindParam(':cod', $cod);
-            $stmt_update->execute();
+            } else {
+                echo "Registro não encontrado.";
+            }
 
-            echo "<script>console.log('Registro atualizado com sucesso PT4.');</script>";
-        } else {
-            echo "<script>console.error('Registro não encontrado.');</script>";
         }
     }
 } catch (PDOException $e) {

@@ -1,6 +1,6 @@
 <?php
 $host = 'localhost';
-$dbname = 'ifcar';
+$dbname = 'IFcar';
 $user = 'postgres';
 $password = '1234567';
 

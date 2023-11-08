@@ -1,13 +1,14 @@
 <div id="formulario_cad">
     <form id="form_cadastro">
-      <label for="cad_endereco">Ponto de Encontro:</label>
-      <input type="text" id="cad_endereco" name="endereco" min="5" max="15" required>
+      <label for="address_ride">Ponto de Encontro:</label>
+      <input type="text" id="address_ride" name="address_ride" max="15" required>
       <p>
-      <label for="cad_hora">Hora:</label>
-      <input type="time" id="cad_hora" name="hora" min="00:00" max="12:60" required>
+      <label for="time_ride">Horário:</label>
+      <input type="time" id="time_ride" name="time_ride" min="00:00" max="12:60" required>
       <p>
-      <label for="quant_max">Quantidade de Vagas:</label>
-      <input type="number" name="quant_max" id="quant_max" min="1" max="4"  required>
+      <label for="max_quant_ride">Quantidade de Vagas:</label>
+      <input type="number" name="max_quant_ride" id="max_quant_ride" min="1" max="4"  required>
+      
         <button type="submit">Cadastrar</button>
         <button type="button" id="voltar">Voltar</button>
       </p>

@@ -1,9 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
-  let pegarCaronaInterval; // letiável para a atualização da lista de carona.
-  // letiáveis para ocultar botões
-  let pegarCaronaButton = document.getElementById('pegar_carona'); 
+  let pegarCaronaInterval; // Variável para a atualização da lista de carona.
+  // Variável para ocultar botões
+  let pegarCaronaButton = document.getElementById('pegar_carona');
   let darCaronaButton = document.getElementById('dar_carona');
-
 
   // Função para dar carona
   function darCarona() {
@@ -20,29 +19,39 @@ document.addEventListener('DOMContentLoaded', function () {
           event.preventDefault();
 
           let formData = new FormData(this);
+          // console.log('Dados do formulário:', formData); // Debug
+
           let xhrCadastro = new XMLHttpRequest();
 
           // Obtém a data atual do navegador
-          let dataAtual = new Date();
-          formData.append('data_cad', dataAtual.toISOString().split('T')[0]);
+          let date_ride = new Date();
+          formData.append('date_ride', date_ride.toISOString().split('T')[0]);
 
           xhrCadastro.open('POST', 'php/cadastra_carona.php', true);
 
           xhrCadastro.onload = function () {
             if (xhrCadastro.status >= 200 && xhrCadastro.status < 400) {
-              let xhrresponse = new XMLHttpRequest();
-              xhrresponse.open('GET', 'src/msg_correct.html', true);
+              // console.log("Acesso a página castra carona bem sucedido"); // Debug
 
+              // Adicionar mensagem diretamente no HTML - Em Produção
+              // let xhrresponse = new XMLHttpRequest();    
+              // xhrresponse.open('GET', 'src/msg_correct.html', true);
             } else {
               console.error('Erro ao cadastrar a carona.');
+
+              // console.log(xhrCadastro.responseText); // Debug
             }
           };
 
           xhrCadastro.onerror = function () {
             console.error('Erro de conexão ao cadastrar a carona.');
+
+            // console.log(xhrCadastro.responseText); // Debug
           };
 
           xhrCadastro.send(formData);
+          // console.log('Enviando requisição...'); // Debug
+          // console.log(formData); //Debug
 
           this.reset();
         });
@@ -62,6 +71,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     xhrDarCarona.onerror = function () {
       console.error('Erro de conexão.');
+
+      // console.log(xhrDarCarona.responseText); // Debug
     };
 
     xhrDarCarona.send();
