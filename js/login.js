@@ -1,16 +1,12 @@
 document.addEventListener('DOMContentLoaded', function () {
     let login_remember_pwdButton = document.getElementById('login_remember_pwd');
     let btn_login_subimit = document.getElementById('btn_login');
-
-    // Função Relembrar Senha
-    function rememberPwd() {
-        console.log('Função ainda não implementada!');
-    }
+    let btn_createAccount_subimit = document.getElementById('btn_createAcount');
 
     // Função para efetuar login
     function userLogin() {
-        let formData = new FormData(this);
-        console.log('Dados do formulário:', formData); // Debug
+        let formData = new FormData(document.getElementById('form_login'));
+        // console.log('Dados do formulário:', formData); // Debug
 
         let xhrUserLogin = new XMLHttpRequest();
 
@@ -18,35 +14,77 @@ document.addEventListener('DOMContentLoaded', function () {
 
         xhrUserLogin.onload = function () {
             if (xhrUserLogin.status >= 200 && xhrUserLogin.status < 400) {
-                console.log("Acesso a página login bem sucedido"); // Debug
+                try {
+                    let response = JSON.parse(xhrUserLogin.responseText);
+                    if (response.success) {
+                        alert('Login bem-sucedido!');
+                    } else {
+                        alert('Erro ao efetuar login: ' + response.message);
+                    }
+                } catch (error) {
+                    console.error('Erro ao fazer parsing da resposta JSON:', error);
+                }
             } else {
                 console.error('Erro ao efetuar login.');
-
                 console.log(xhrUserLogin.responseText); // Debug
             }
         };
 
         xhrUserLogin.onerror = function () {
             console.error('Erro de conexão ao efetuar login.');
-
-             console.log(xhrUserLogin.responseText); // Debug
+            console.log(xhrUserLogin.responseText); // Debug
         };
 
-        xhrUserLogin.send(FormData);
+        xhrUserLogin.send(formData);
         console.log('Enviando requisição...'); // Debug
         console.log(formData); //Debug
 
-        this.reset();
+        document.getElementById('form_login').reset();
     }
 
-    // Função Login via OAth2
-    function onSignIn(googleUser) {
-        let profile = googleUser.getBasicProfile();
-        console.log('ID: ' + profile.getId());
-        console.log('Nome: ' + profile.getName());
-        console.log('Email: ' + profile.getEmail());
+    // Função Relembrar Senha
+    function rememberPwd() {
+        console.log('Função ainda não implementada!');
+    }
+
+    // Função para Criar Conta
+    function createAccount() {
+        let formData = new FormData(document.getElementById('form_login'));
+        let xhrCreateAccount = new XMLHttpRequest();
+    
+        xhrCreateAccount.open('POST', '../php/create_account.php', true);
+    
+        xhrCreateAccount.onload = function () {
+            if (xhrCreateAccount.status >= 200 && xhrCreateAccount.status < 400) {
+                try {
+                    let response = JSON.parse(xhrCreateAccount.responseText);
+                    if (response.success) {
+                        alert('Conta criada com sucesso!');
+                    } else {
+                        alert('Erro ao tentar criar conta: ' + response.message);
+                    }
+                } catch (error) {
+                    console.error('Erro ao fazer parsing da resposta JSON:', error);
+                }
+            } else {
+                console.error('Erro ao tentar criar conta.');
+                // console.log(xhrCreateAccount.responseText); // Debug
+            }
+        };
+    
+        xhrCreateAccount.onerror = function () {
+            console.error('Erro de conexão ao Criar Conta.');
+            // console.log(xhrCreateAccount.responseText); // Debug
+        };
+    
+        xhrCreateAccount.send(formData);
+        // console.log('Enviando requisição...'); // Debug
+        // console.log(formData); // Debug
+    
+        document.getElementById('form_login').reset();
     }
 
     login_remember_pwdButton.addEventListener('click', rememberPwd);
     btn_login_subimit.addEventListener('click', userLogin);
+    btn_createAccount_subimit.addEventListener('click', createAccount);
 });

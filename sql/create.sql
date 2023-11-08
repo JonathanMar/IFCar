@@ -20,6 +20,6 @@ CREATE TABLE
   public.users_tb (
     cod_user serial NOT NULL,
     email_user character varying(255) NOT NULL,
-    password_user character varying(30) NOT NULL
+    password_user character varying(61) NOT NULL,
     PRIMARY KEY (cod_ride)
 );

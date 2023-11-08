@@ -42,11 +42,22 @@ function acceptedRide($db, $cod_ride)
     return $stmt_select->fetch(PDO::FETCH_ASSOC);
 }
 
-function loginUser($db, $email_user, $password_user) {
+function loginUser($db, $email_user, $password_user)
+{
     // echo "Login user..."; // Debug
+    $stmt_select = $db->prepare("SELECT email_user, password_user FROM users_tb WHERE email_user = :email_user AND password_user = :password_user");
+    $stmt_select->bindParam(':email_user', $email_user);
+    $stmt_select->bindParam(':password_user', $password_user);
+    $stmt_select->execute();
+    return $stmt_select->fetchAll(PDO::FETCH_ASSOC);
+}
+function createAccount($db, $email_user, $password_user)
+{
+    // echo "Create user..."; // Debug
     $stmt = $db->prepare('INSERT INTO users_tb (email_user, password_user) VALUES (:email_user, :password_user)');
     $stmt->bindParam(':email_user', $email_user);
     $stmt->bindParam(':password_user', $password_user);
     $stmt->execute();
+    return true;
 }
 ?>
