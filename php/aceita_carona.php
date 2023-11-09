@@ -5,16 +5,13 @@ try {
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $cod_ride = $_POST["cod_ride"];
-        echo $cod_ride;
     
-        $result = acceptedRide($db, $cod_ride, $accepted_ride);
+        $result = getAllRides($db);
 
         if ($result) {
             foreach ($result as $row) {
-                $new_accepted_ride = $row['accepted_ride'] + 1;
-                updateAcceptedRide($db, $new_accepted_ride, $cod_ride); 
-                echo $new_accepted_ride; 
-                echo $cod_ride;
+                $accepted_ride = $row['accepted_ride'] + 1;
+                updateAcceptedRide($db, $accepted_ride, $cod_ride); 
             }
         } else {
             echo "Registro não encontrado.";
