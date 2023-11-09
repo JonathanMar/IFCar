@@ -69,3 +69,9 @@ function address_ride_check($db, $address_id): ?array {
 
     return $meeting_points;
 }
+
+function accepted_ride_list($db) {
+    $stmt_select = $db->prepare("SELECT * FROM rides_tb WHERE accepted_ride > '0'");
+    $stmt_select->execute();
+    return $stmt_select->fetchAll(PDO::FETCH_ASSOC);
+}

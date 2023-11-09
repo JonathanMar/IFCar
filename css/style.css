@@ -150,6 +150,15 @@ input[type="number"] {
     align-items: center;
 }
 
+.cancelar_carona {
+    flex-direction: column;
+    margin: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
 .aceitar_car {
     border: 2px solid rgba(69, 160, 73, .3);
     border-radius: 10px;

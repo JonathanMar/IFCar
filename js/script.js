@@ -3,10 +3,12 @@ document.addEventListener('DOMContentLoaded', function () {
   // Variável para ocultar botões
   let pegarCaronaButton = document.getElementById('pegar_carona');
   let darCaronaButton = document.getElementById('dar_carona');
+  let caronaAceitaCaronaButton = document.getElementById('carrona_aceita');
 
   // Função para dar carona
   function darCarona() {
     pegarCaronaButton.style.display = 'none'; // Oculta o botão "Pegar Carona"
+    caronaAceitaCaronaButton.style.display = 'none'; // Oculta o botão "Pegar Carona"
 
     let xhrDarCarona = new XMLHttpRequest();
     xhrDarCarona.open('GET', 'src/formulario_cadastro.html', true);
@@ -120,6 +122,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
           // Exibe o botão "Pegar Carona"
           pegarCaronaButton.style.display = 'block';
+          caronaAceitaCaronaButton.style.display = 'block';
         });
 
       } else {
@@ -140,6 +143,7 @@ document.addEventListener('DOMContentLoaded', function () {
   function pegarCarona() {
     // // Oculta o botão "Dar Carona"
     darCaronaButton.style.display = 'none';
+    caronaAceitaCaronaButton.style.display = 'none';
 
     function atualizarCaronas() {
       let xhrPegarCarona = new XMLHttpRequest();
@@ -186,6 +190,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Exibe o botão "Pegar Carona"
             darCaronaButton.style.display = "block";
+            caronaAceitaCaronaButton.style.display = "block";
           });
 
         } else {
@@ -206,7 +211,82 @@ document.addEventListener('DOMContentLoaded', function () {
     // Chama a função para atualizar a lista de caronas
     pegarCaronaInterval = setInterval(atualizarCaronas, 2000);
   }
+
+  function caronaAceita() {
+    // Oculta Botões
+    pegarCaronaButton.style.display = 'none';
+    darCaronaButton.style.display = 'none';
+
+    function atualizarCaronas() {
+      let xhrPegarCarona = new XMLHttpRequest();
+      xhrPegarCarona.open('GET', 'php/caronas_aceitas.php', true);
+
+      xhrPegarCarona.onload = function () {
+        if (xhrPegarCarona.status >= 200 && xhrPegarCarona.status < 400) {
+          document.getElementById('lista_carona').innerHTML = xhrPegarCarona.responseText;
+
+          let btn_aceita_carona = document.getElementsByClassName('cancelar_carona');
+
+          for (let i = 0; i < btn_aceita_carona.length; i++) {
+            btn_aceita_carona[i].addEventListener('click', function () {
+              let idDoRegistro = this.dataset.id;
+              console.log(idDoRegistro);
+              let accepted_ride = 1;
+
+              let xhrCaronaAceita = new XMLHttpRequest();
+              xhrCaronaAceita.open('POST', 'php/cancela_carona.php', true);
+              xhrCaronaAceita.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+
+              xhrCaronaAceita.onload = function () {
+                if (xhrCaronaAceita.status >= 200 && xhrCaronaAceita.status < 400) {
+                  console.log('Registro Atualizado.');
+                } else {
+                  console.error('Erro ao atualizar o registro.');
+                }
+              };
+
+              xhrCaronaAceita.onerror = function () {
+                console.error('Erro de conexão ao atualizar o registro.');
+              };
+
+              xhrCaronaAceita.send('cod_ride=' + encodeURIComponent(idDoRegistro) + '&accepted_ride=' + encodeURIComponent(accepted_ride));
+            });
+          }
+
+          // Adiciona evento de clique ao botão "Voltar"
+          document.getElementById('voltar_pegCar').addEventListener('click', function () {
+            document.getElementById('lista_carona').innerHTML = '';
+
+            // Cancela o intervalo de atualização
+            clearInterval(pegarCaronaInterval);
+
+            // Exibe o botão "Pegar Carona"
+            darCaronaButton.style.display = "block";
+            pegarCaronaButton.style.display = "block";
+          });
+
+        } else {
+          console.error('Erro ao carregar a lista de caronas.');
+        }
+      };
+
+      xhrPegarCarona.onerror = function () {
+        console.error('Erro de conexão.');
+      };
+
+      xhrPegarCarona.send();
+    };
+
+    // Chama a função para atualizar a lista de caronas imediatamente
+    atualizarCaronas();
+
+    // Chama a função para atualizar a lista de caronas
+    pegarCaronaInterval = setInterval(atualizarCaronas, 2000);
+  }
+
+
   // Adiciona eventos aos botões
   darCaronaButton.addEventListener('click', darCarona);
   pegarCaronaButton.addEventListener('click', pegarCarona);
+  caronaAceitaCaronaButton.addEventListener('click', caronaAceita);
 });
