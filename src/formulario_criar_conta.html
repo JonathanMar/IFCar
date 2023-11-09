@@ -1,0 +1,44 @@
+<body>
+    <div class="container">
+        <div class="login">
+            <form id="form_login">
+                <div class="title">
+                    <h2> Criar Conta </h2>
+                </div>
+
+                <div class="input-box">
+                    <div class="input-box-op">
+                        <label for="name_user"> Nome de Usuário </label> 
+                        <input type="text" name="name_user" id="name_user"
+                            minlength="8" maxlength="50" required _lpchecked="1">
+                    </div>
+                    <div class="input-box-op">
+                        <label for="email_user"> E-mail </label> 
+                        <input type="email" name="email_user" id="email_user" required _lpchecked="1">
+                    </div>
+                    <div class="input-box-op">
+                        <label for="car_model_user"> Modelo do Veículo </label> 
+                        <input type="text" name="car_model_user" id="email_user" required _lpchecked="1">
+                    </div>
+                    <div class="input-box-op">
+                        <label for="password_user"> Senha </label> <input type="password" name="password_user"
+                            id="password_user" minlength="8" required _lpchecked="1">
+                    </div>
+                </div>
+
+                <div class="button">
+                    <input type="button" id="btn_login" class="btn" value="Criar Conta">
+                    <button type="button" id="voltar" class="btn">Voltar</button>
+                </div>
+                
+
+                </div>
+
+                <!-- Login via google API OAuth2 - Em produção -->
+                <!-- <div class="button">
+                    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+                </div>                 -->
+
+            </form>
+        </div>
+    </div>

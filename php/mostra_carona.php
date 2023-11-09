@@ -18,7 +18,6 @@ try {
                 echo "<div class='aceitar_car'>";
                 echo "Quantidade de Vagas: " . $max_quant_ride . ".";
                 echo "<button class='aceitar_carona' data-id='" . $row['cod_ride'] . "'> Aceitar Carona </button>";
-                // echo "cod_ride: " . $row['cod_ride'] . " "; // Mostra o código de cada registro (Debug)
                 echo "</div>";
                 echo '</div>';
             } else {
@@ -28,7 +27,6 @@ try {
                 echo "Horario: " . substr($row['time_ride'], 0, 5);
                 echo "<div class='aceitar_car'>";
                 echo "<p>Todas as vagas desta carrona estão ocupadas!<p>";
-                // echo "cod_ride: " . $row['cod_ride'] . " "; Mostra o código de cada registro (Debug)
                 echo "</div>";
                 echo '</div>';
 

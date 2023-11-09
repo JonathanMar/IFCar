@@ -228,3 +228,15 @@ input[type="number"] {
 .cont p{
     padding-bottom: 10px;
 }
+
+.login_create_acount a {
+    text-decoration: none;
+    color: #000000;
+}
+
+.login_create_acount a:hover{
+    text-decoration: none;
+    color: #000000;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}

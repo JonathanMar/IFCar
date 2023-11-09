@@ -18,8 +18,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     let response = JSON.parse(xhrUserLogin.responseText);
                     if (response.success) {
                         alert('Login bem-sucedido!');
+
                     } else {
-                        alert('Erro ao efetuar login: ' + response.message);
+                        alert('Usuário ou Senha Incorretos: ' + response.message);
                     }
                 } catch (error) {
                     console.error('Erro ao fazer parsing da resposta JSON:', error);
@@ -51,17 +52,19 @@ document.addEventListener('DOMContentLoaded', function () {
     function createAccount() {
         let formData = new FormData(document.getElementById('form_login'));
         let xhrCreateAccount = new XMLHttpRequest();
-    
-        xhrCreateAccount.open('POST', '../php/create_account.php', true);
-    
+
+        xhrCreateAccount.open('GET', 'formulario_criar_conta.html', true);
+
         xhrCreateAccount.onload = function () {
             if (xhrCreateAccount.status >= 200 && xhrCreateAccount.status < 400) {
+                document.body.innerHTML = xhrCreateAccount.responseText;
+
                 try {
                     let response = JSON.parse(xhrCreateAccount.responseText);
                     if (response.success) {
                         alert('Conta criada com sucesso!');
                     } else {
-                        alert('Erro ao tentar criar conta: ' + response.message);
+                        console.log(response.message);
                     }
                 } catch (error) {
                     console.error('Erro ao fazer parsing da resposta JSON:', error);
@@ -71,17 +74,24 @@ document.addEventListener('DOMContentLoaded', function () {
                 // console.log(xhrCreateAccount.responseText); // Debug
             }
         };
-    
+
+
         xhrCreateAccount.onerror = function () {
             console.error('Erro de conexão ao Criar Conta.');
             // console.log(xhrCreateAccount.responseText); // Debug
         };
-    
+
         xhrCreateAccount.send(formData);
         // console.log('Enviando requisição...'); // Debug
         // console.log(formData); // Debug
-    
-        document.getElementById('form_login').reset();
+
+
+        // Adiciona evento de clique ao botão "Voltar"
+        document.getElementById('voltar_btn').addEventListener('click', function () {
+            // Restaura o conteúdo original
+            document.body.innerHTML = originalContent;
+        });
+        
     }
 
     login_remember_pwdButton.addEventListener('click', rememberPwd);
