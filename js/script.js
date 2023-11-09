@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function () {
           for (let i = 0; i < btn_aceita_carona.length; i++) {
             btn_aceita_carona[i].addEventListener('click', function () {
               let idDoRegistro = this.dataset.id;
-              let aceita = 1;
+              let accepted_ride = 1;
 
               let xhrCaronaAceita = new XMLHttpRequest();
               xhrCaronaAceita.open('POST', 'php/aceita_carona.php', true);
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error('Erro de conexão ao atualizar o registro.');
               };
 
-              xhrCaronaAceita.send('cod=' + encodeURIComponent(idDoRegistro) + '&aceita=' + encodeURIComponent(aceita));
+              xhrCaronaAceita.send('cod=' + encodeURIComponent(idDoRegistro) + '&accepted_ride=' + encodeURIComponent(accepted_ride));
             });
           }
 

@@ -33,13 +33,22 @@ function getAllRides($db)
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function acceptedRide($db, $cod_ride)
+function acceptedRide($db, $cod_ride, $accepted_ride)
 {
-    // echo "Acepting rides..."; // Debug
+    echo "Select accepted..."; // Debug
     $stmt_select = $db->prepare("SELECT accepted_ride FROM rides_tb WHERE cod_ride = :cod_ride");
     $stmt_select->bindParam(':cod_ride', $cod_ride);
     $stmt_select->execute();
     return $stmt_select->fetch(PDO::FETCH_ASSOC);
+}
+
+function updateAcceptedRide($db, $accepted_ride, $cod_ride)
+{
+    echo "Update accepted..."; // Debug
+    $stmt_update = $db->prepare("UPDATE rides_tb SET accepted_ride = :accepted_ride WHERE cod_ride = :cod_ride");
+    $stmt_update->bindParam(':accepted_ride', $accepted_ride);
+    $stmt_update->bindParam(':cod_ride', $cod_ride);
+    $stmt_update->execute();
 }
 
 function loginUser($db, $email_user, $password_user)
