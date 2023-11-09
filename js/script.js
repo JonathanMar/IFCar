@@ -14,25 +14,25 @@ document.addEventListener('DOMContentLoaded', function () {
     xhrDarCarona.onload = function () {
       if (xhrDarCarona.status >= 200 && xhrDarCarona.status < 400) {
         document.getElementById('formulario_cad').innerHTML = xhrDarCarona.responseText;
-        
+
         // Seleção de endereços
         // document.getElementById('address_ride_select').addEventListener('', function (event) {
         //   let selectedAddressId = this.value;
         //   let xhrGetMeetingPoints = new XMLHttpRequest();
         //   xhrGetMeetingPoints.open('GET', 'php/address_ride.php', true);
-        
+
         //   xhrGetMeetingPoints.onload = function () {
         //     if (xhrGetMeetingPoints.status >= 200 && xhrGetMeetingPoints.status < 400) {
         //       let meetingPoints = JSON.parse(xhrGetMeetingPoints.responseText);
-        
+
         //       // Limpa as opções anteriores
         //       let meetingPointSelect = document.getElementById('address_ride');
         //       console.log(xhrGetMeetingPoints.responseText); // Debug
-               
+
         //       while (meetingPointSelect.firstChild) {
         //         meetingPointSelect.removeChild(meetingPointSelect.firstChild);
         //       }
-        
+
         //       console.log(Array.isArray(meetingPoints));// Debug
         //       meetingPoints.forEach(function (meetingPoint) {
         //         let option = document.createElement('option');
@@ -45,11 +45,11 @@ document.addEventListener('DOMContentLoaded', function () {
         //       console.error('Erro ao obter os pontos de encontro.');
         //     }
         //   };
-        
+
         //   xhrGetMeetingPoints.onerror = function () {
         //     console.error('Erro de conexão ao obter os pontos de encontro.');
         //   };
-        
+
         //   xhrGetMeetingPoints.send();
         //   console.log('Enviando requisição...'); // Debug
         //   console.log(xhrGetMeetingPoints); //Debug
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
           // Obtém a data atual do navegador
           let date_ride = new Date();
-          formData.append('date_ride', date_ride.toISOString().split('T')[0]);
+          formData.append('date_ride', date_ride.toISOString());
 
           xhrCadastro.open('POST', 'php/cadastra_carona.php', true);
 
@@ -94,6 +94,22 @@ document.addEventListener('DOMContentLoaded', function () {
           xhrCadastro.send(formData);
           // console.log('Enviando requisição...'); // Debug
           // console.log(formData); //Debug
+
+          // Após o cadastro ser concluído com sucesso, exibe a mensagem
+          var mensagemDiv = document.querySelector('.result');
+          mensagemDiv.innerHTML = '';
+
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', 'src/msg_coorrect.html', true);
+
+          xhr.onload = function () {
+            if (xhr.status === 200) {
+              // Adiciona o conteúdo ao DOM
+              mensagemDiv.innerHTML = xhr.responseText;
+            }
+          };
+
+          xhr.send();
 
           this.reset();
         });

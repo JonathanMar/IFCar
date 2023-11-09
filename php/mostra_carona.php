@@ -26,7 +26,7 @@ try {
                 echo "Endereço: " . $row['address_ride'];
                 echo "<br>";
                 echo "Horario: " . substr($row['time_ride'], 0, 5);
-                echo "<div>";
+                echo "<div class='aceitar_car'>";
                 echo "<p>Todas as vagas desta carrona estão ocupadas!<p>";
                 // echo "cod_ride: " . $row['cod_ride'] . " "; Mostra o código de cada registro (Debug)
                 echo "</div>";
@@ -35,10 +35,13 @@ try {
             }
         }
     } else {
+        echo "<div class='carona-item'>";
         echo "Nenhuma carona existente no momento!";
+        
     }
 
     echo "<button id='voltar_pegCar' class='btn'>Voltar</button>";
+    echo "</div>";
 
 } catch (PDOException $e) {
     echo "Erro na conexão: " . $e->getMessage();

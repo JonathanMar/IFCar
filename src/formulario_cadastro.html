@@ -1,9 +1,11 @@
 <div id="formulario_cad">
   <form id="form_cadastro">
     <div class="cont">
-      <label for="address_ride">Ponto de Encontro:</label>
-      <input type="text" id="address_ride" name="address_ride" max="15" required>
-      
+      <p>
+        <label for="address_ride">Ponto de Encontro:</label>
+        <input type="text" id="address_ride" name="address_ride" max="15" required>
+      </p>
+
       <!-- <label for="address_ride_select"> Localização: </label>
       <select id="address_ride_select">
 
@@ -17,10 +19,14 @@
       <p>
         <label for="time_ride">Horário:</label>
         <input type="time" id="time_ride" name="time_ride" min="00:00" max="23:59" required>
+      </p>
+
       <p>
         <label for="max_quant_ride">Quantidade de Vagas:</label>
         <input type="number" name="max_quant_ride" id="max_quant_ride" min="1" max="4" required>
+      </p>
     </div>
+    <div class="result"></div>
     <button type="submit" class="btn">Cadastrar</button>
     <button type="button" id="voltar" class="btn">Voltar</button>
   </form>
