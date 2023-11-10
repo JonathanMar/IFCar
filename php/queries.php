@@ -68,7 +68,8 @@ function getPasswordHashByEmail($db, $email_user)
 
     return $result['password_user'] ?? null;
 }
-function address_ride_check($db, $address_id): ?array {
+function address_ride_check($db, $address_id): ?array
+{
     $stmt = $db->prepare("SELECT * FROM address_ride WHERE cod_address = :address_id");
     $stmt->bindParam(':address_id', $address_id);
     $stmt->execute();
@@ -77,8 +78,16 @@ function address_ride_check($db, $address_id): ?array {
     return $meeting_points;
 }
 
-function accepted_ride_list($db) {
+function accepted_ride_list($db)
+{
     $stmt_select = $db->prepare("SELECT * FROM rides_tb WHERE accepted_ride > '0'");
+    $stmt_select->execute();
+    return $stmt_select->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function caronas_cadastradas($db)
+{
+    $stmt_select = $db->prepare("SELECT * FROM rides_tb");
     $stmt_select->execute();
     return $stmt_select->fetchAll(PDO::FETCH_ASSOC);
 }

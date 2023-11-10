@@ -8,7 +8,6 @@ try {
     if ($result) {
         foreach ($result as $row) {
             $max_quant_ride = $row['max_quant_ride'] - $row['accepted_ride'];
-            // echo $max_quant_ride; // Debug
 
             if ($max_quant_ride > 0) {
                 echo "<div class='carona-item'>";
@@ -29,7 +28,6 @@ try {
                 echo "<p>Todas as vagas desta carrona estão ocupadas!<p>";
                 echo "</div>";
                 echo '</div>';
-
             }
         }
     } else {

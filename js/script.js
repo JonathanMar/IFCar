@@ -1,14 +1,27 @@
 document.addEventListener('DOMContentLoaded', function () {
-  let pegarCaronaInterval; // Variável para a atualização da lista de carona.
-  // Variável para ocultar botões
+  let caronaInterval;
   let pegarCaronaButton = document.getElementById('pegar_carona');
   let darCaronaButton = document.getElementById('dar_carona');
   let caronaAceitaCaronaButton = document.getElementById('carrona_aceita');
+  let caronaCadastradasButton = document.getElementById('carnas_cadastradas');
+
+  // Função para Mudar Visibilidade dos Botões.
+  function visibilidadeBtn(tipo, ...botoes) {
+    for (let botao of botoes) {
+      if (botao) {
+        botao.style.display = tipo;
+      }
+    }
+  };
+
+  // Função para Botão Voltar
+  function voltarButton(cont) {
+    document.getElementById(cont).innerHTML = '';
+  };
 
   // Função para dar carona
   function darCarona() {
-    pegarCaronaButton.style.display = 'none'; // Oculta o botão "Pegar Carona"
-    caronaAceitaCaronaButton.style.display = 'none'; // Oculta o botão "Pegar Carona"
+    visibilidadeBtn('none', pegarCaronaButton, caronaAceitaCaronaButton, caronaCadastradasButton);
 
     let xhrDarCarona = new XMLHttpRequest();
     xhrDarCarona.open('GET', 'src/formulario_cadastro.html', true);
@@ -63,7 +76,6 @@ document.addEventListener('DOMContentLoaded', function () {
           event.preventDefault();
 
           let formData = new FormData(this);
-          // console.log('Dados do formulário:', formData); // Debug
 
           let xhrCadastro = new XMLHttpRequest();
 
@@ -75,27 +87,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
           xhrCadastro.onload = function () {
             if (xhrCadastro.status >= 200 && xhrCadastro.status < 400) {
-              // console.log("Acesso a página castra carona bem sucedido"); // Debug
 
-              // Adicionar mensagem diretamente no HTML - Em Produção
-              // let xhrresponse = new XMLHttpRequest();    
-              // xhrresponse.open('GET', 'src/msg_correct.html', true);
             } else {
               console.error('Erro ao cadastrar a carona.');
-
-              // console.log(xhrCadastro.responseText); // Debug
             }
           };
 
           xhrCadastro.onerror = function () {
             console.error('Erro de conexão ao cadastrar a carona.');
-
-            // console.log(xhrCadastro.responseText); // Debug
           };
 
           xhrCadastro.send(formData);
-          // console.log('Enviando requisição...'); // Debug
-          // console.log(formData); //Debug
 
           // Após o cadastro ser concluído com sucesso, exibe a mensagem
           var mensagemDiv = document.querySelector('.result');
@@ -106,7 +108,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
           xhr.onload = function () {
             if (xhr.status === 200) {
-              // Adiciona o conteúdo ao DOM
               mensagemDiv.innerHTML = xhr.responseText;
             }
           };
@@ -117,12 +118,10 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // Adiciona evento de clique ao botão "Voltar"
-        document.getElementById('voltar').addEventListener('click', function () {
-          document.getElementById('formulario_cad').innerHTML = '';
+        document.getElementById('voltar_CadUse').addEventListener('click', function () {
+          voltarButton('formulario_cad');
 
-          // Exibe o botão "Pegar Carona"
-          pegarCaronaButton.style.display = 'block';
-          caronaAceitaCaronaButton.style.display = 'block';
+          visibilidadeBtn('block', pegarCaronaButton, darCaronaButton, caronaAceitaCaronaButton, caronaCadastradasButton);
         });
 
       } else {
@@ -132,8 +131,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     xhrDarCarona.onerror = function () {
       console.error('Erro de conexão.');
-
-      // console.log(xhrDarCarona.responseText); // Debug
     };
 
     xhrDarCarona.send();
@@ -141,9 +138,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Função para pegar carona
   function pegarCarona() {
-    // // Oculta o botão "Dar Carona"
-    darCaronaButton.style.display = 'none';
-    caronaAceitaCaronaButton.style.display = 'none';
+    visibilidadeBtn('none', darCaronaButton, caronaAceitaCaronaButton, caronaCadastradasButton);
 
     function atualizarCaronas() {
       let xhrPegarCarona = new XMLHttpRequest();
@@ -158,7 +153,6 @@ document.addEventListener('DOMContentLoaded', function () {
           for (let i = 0; i < btn_aceita_carona.length; i++) {
             btn_aceita_carona[i].addEventListener('click', function () {
               let idDoRegistro = this.dataset.id;
-              console.log(idDoRegistro);
               let accepted_ride = 1;
 
               let xhrCaronaAceita = new XMLHttpRequest();
@@ -167,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
               xhrCaronaAceita.onload = function () {
                 if (xhrCaronaAceita.status >= 200 && xhrCaronaAceita.status < 400) {
-                  console.log('Registro Atualizado.');
+
                 } else {
                   console.error('Erro ao atualizar o registro.');
                 }
@@ -183,14 +177,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
           // Adiciona evento de clique ao botão "Voltar"
           document.getElementById('voltar_pegCar').addEventListener('click', function () {
-            document.getElementById('lista_carona').innerHTML = '';
+            voltarButton(lista_carona);
 
             // Cancela o intervalo de atualização
-            clearInterval(pegarCaronaInterval);
+            clearInterval(caronaInterval);
 
-            // Exibe o botão "Pegar Carona"
-            darCaronaButton.style.display = "block";
-            caronaAceitaCaronaButton.style.display = "block";
+            visibilidadeBtn('block', darCaronaButton, caronaAceitaCaronaButton, caronaCadastradasButton);
           });
 
         } else {
@@ -209,13 +201,12 @@ document.addEventListener('DOMContentLoaded', function () {
     atualizarCaronas();
 
     // Chama a função para atualizar a lista de caronas
-    pegarCaronaInterval = setInterval(atualizarCaronas, 2000);
+    caronaInterval = setInterval(atualizarCaronas, 2000);
   }
 
   function caronaAceita() {
-    // Oculta Botões
-    pegarCaronaButton.style.display = 'none';
-    darCaronaButton.style.display = 'none';
+    // Exibe Botões
+    visibilidadeBtn('none', darCaronaButton, pegarCaronaButton, caronaCadastradasButton);
 
     function atualizarCaronas() {
       let xhrPegarCarona = new XMLHttpRequest();
@@ -230,7 +221,6 @@ document.addEventListener('DOMContentLoaded', function () {
           for (let i = 0; i < btn_aceita_carona.length; i++) {
             btn_aceita_carona[i].addEventListener('click', function () {
               let idDoRegistro = this.dataset.id;
-              console.log(idDoRegistro);
               let accepted_ride = 1;
 
               let xhrCaronaAceita = new XMLHttpRequest();
@@ -239,7 +229,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
               xhrCaronaAceita.onload = function () {
                 if (xhrCaronaAceita.status >= 200 && xhrCaronaAceita.status < 400) {
-                  console.log('Registro Atualizado.');
+
                 } else {
                   console.error('Erro ao atualizar o registro.');
                 }
@@ -255,14 +245,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
           // Adiciona evento de clique ao botão "Voltar"
           document.getElementById('voltar_pegCar').addEventListener('click', function () {
-            document.getElementById('lista_carona').innerHTML = '';
+            voltarButton(lista_carona);
+
 
             // Cancela o intervalo de atualização
-            clearInterval(pegarCaronaInterval);
+            clearInterval(caronaInterval);
 
-            // Exibe o botão "Pegar Carona"
-            darCaronaButton.style.display = "block";
-            pegarCaronaButton.style.display = "block";
+            // Exibe Botões
+            visibilidadeBtn('block', darCaronaButton, pegarCaronaButton, caronaCadastradasButton);
           });
 
         } else {
@@ -281,12 +271,49 @@ document.addEventListener('DOMContentLoaded', function () {
     atualizarCaronas();
 
     // Chama a função para atualizar a lista de caronas
-    pegarCaronaInterval = setInterval(atualizarCaronas, 2000);
+    caronaInterval = setInterval(atualizarCaronas, 2000);
   }
 
+  // Função Botão Lista Caronas
+  function caronaCadstradas() {
+    visibilidadeBtn('none', darCaronaButton, pegarCaronaButton, caronaAceitaCaronaButton);
+
+    function atualizarCaronas() {
+      let xhrCaronaCadastrada = new XMLHttpRequest();
+      xhrCaronaCadastrada.open('GET', 'php/caronas_cadastradas.php', true)
+
+      xhrCaronaCadastrada.onload = function () {
+        if (xhrCaronaCadastrada.status >= 200 && xhrCaronaCadastrada.status < 400) {
+          document.getElementById('lista_carona').innerHTML = xhrCaronaCadastrada.responseText;
+
+          // Adiciona evento de clique ao botão "Voltar"
+          document.getElementById('voltar').addEventListener('click', function () {
+            voltarButton(lista_carona);
+
+            visibilidadeBtn('block', darCaronaButton, pegarCaronaButton, caronaAceitaCaronaButton, caronaCadastradasButton);
+          });
+        } else {
+          console.error('Erro ao carregar a lista de caronas.');
+        }
+      }
+
+      xhrCaronaCadastrada.onerror = function () {
+        console.error('Erro de conexão ao atualizar o registro.');
+      };
+
+      xhrCaronaCadastrada.send();
+    };
+
+    // Chama a função para atualizar a lista de caronas imediatamente
+    atualizarCaronas();
+
+    // Chama a função para atualizar a lista de caronas
+    caronaInterval = setInterval(atualizarCaronas, 2000);
+  }
 
   // Adiciona eventos aos botões
   darCaronaButton.addEventListener('click', darCarona);
   pegarCaronaButton.addEventListener('click', pegarCarona);
   caronaAceitaCaronaButton.addEventListener('click', caronaAceita);
+  caronaCadastradasButton.addEventListener('click', caronaCadstradas);
 });

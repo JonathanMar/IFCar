@@ -26,6 +26,7 @@ try {
             insertRide($db, $address_ride, $time_ride, $max_quant_ride, $date_ride);
         }
     }
+
 } catch (PDOException $e) {
     echo "Erro na conexão: " . $e->getMessage();
 } catch (Exception $e) {
