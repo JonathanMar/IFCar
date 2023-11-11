@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
           // Adiciona evento de clique ao botão "Voltar"
           document.getElementById('voltar_pegCar').addEventListener('click', function () {
-            voltarButton(lista_carona);
+            voltarButton('lista_carona');
 
             // Cancela o intervalo de atualização
             clearInterval(caronaInterval);
@@ -245,7 +245,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
           // Adiciona evento de clique ao botão "Voltar"
           document.getElementById('voltar_pegCar').addEventListener('click', function () {
-            voltarButton(lista_carona);
+            voltarButton('lista_carona');
 
 
             // Cancela o intervalo de atualização
@@ -276,7 +276,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Função Botão Lista Caronas
   function caronaCadstradas() {
-    visibilidadeBtn('none', darCaronaButton, pegarCaronaButton, caronaAceitaCaronaButton);
+    visibilidadeBtn('none', darCaronaButton, pegarCaronaButton, caronaAceitaCaronaButton, caronaCadastradasButton);
 
     function atualizarCaronas() {
       let xhrCaronaCadastrada = new XMLHttpRequest();
@@ -286,9 +286,50 @@ document.addEventListener('DOMContentLoaded', function () {
         if (xhrCaronaCadastrada.status >= 200 && xhrCaronaCadastrada.status < 400) {
           document.getElementById('lista_carona').innerHTML = xhrCaronaCadastrada.responseText;
 
+          document.getElementById('btn_edit').addEventListener('click', function () {
+            let xhrEditButton = new XMLHttpRequest();
+            xhrEditButton.open('POST', 'php/editar_caronas.php', true)
+
+            xhrEditButton.onload = function () {
+              if (xhrEditButton.status >= 200 && xhrEditButton.status < 400) {
+
+              } else {
+                console.error('Erro Interno!')
+              }
+            };
+
+            xhrEditButton.onerror = function () {
+              console.error('Erro Interno!');
+            };
+
+            xhrEditButton.send('cod_ride=' + encodeURIComponent(idDoRegistro));
+          });
+
+          document.getElementById('btn_cancel').addEventListener('click', function () {
+            let xhrCancelButton = new XMLHttpRequest();
+            xhrCancelButton.open('POST', 'php/cancelar_cad_caronas.php', true)
+
+            xhrEditButton.onload = function () {
+              if (xhrCaronaCadastrada.status >= 200 && xhrCaronaCadastrada.status < 400) {
+
+              } else {
+                console.error('Erro Interno!')
+              }
+            };
+
+            xhrEditButton.onerror = function () {
+              console.error('Erro Interno!');
+            };
+
+            xhrEditButton.send('cod_ride=' + encodeURIComponent(idDoRegistro));
+          });
+
           // Adiciona evento de clique ao botão "Voltar"
           document.getElementById('voltar').addEventListener('click', function () {
-            voltarButton(lista_carona);
+            voltarButton('lista_carona');
+
+            // Cancela o intervalo de atualização
+            clearInterval(caronaInterval);
 
             visibilidadeBtn('block', darCaronaButton, pegarCaronaButton, caronaAceitaCaronaButton, caronaCadastradasButton);
           });
