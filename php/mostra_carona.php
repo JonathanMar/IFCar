@@ -32,11 +32,11 @@ try {
         }
     } else {
         echo "<div class='carona-item'>";
-        echo "Nenhuma carona existente no momento!";
+            echo "Nenhuma carona existente no momento!";
         
     }
 
-    echo "<button id='voltar_pegCar' class='btn'>Voltar</button>";
+        echo "<button id='voltar_pegCar' class='btn'>Voltar</button>";
     echo "</div>";
 
 } catch (PDOException $e) {

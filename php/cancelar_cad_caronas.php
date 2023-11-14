@@ -5,14 +5,11 @@ try {
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $cod_ride = $_POST["cod_ride"];
-    
         $result = getAllRides($db);
 
         if ($result) {
-            foreach ($result as $row) {
-                $accepted_ride = $row['accepted_ride'] + 1;
-                updateAcceptedRide($db, $accepted_ride, $cod_ride); 
-            }
+            cancel_carpool($db, $cod_ride);
+            echo "Carona cancelada com sucesso.";
         } else {
             echo "Registro não encontrado.";
         }

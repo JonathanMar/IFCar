@@ -25,9 +25,18 @@ function insertRide($db, $address_ride, $time_ride, $max_quant_ride, $date_ride)
 // Seleciona todas as caronas do banco de dados
 function getAllRides($db)
 {
-    $stmt = $db->prepare("SELECT * FROM rides_tb");
+    $stmt = $db->prepare("SELECT * FROM rides_tb WHERE status_ride > 0");
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// Seleciona a carona pelo cod_ride
+function getRideInfo($db, $cod_ride)
+{
+    $stmt = $db->prepare("SELECT * FROM rides_tb WHERE cod_ride = :cod_ride");
+    $stmt->bindParam(':cod_ride', $cod_ride);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
 // Atualiza a quantidade de carona aceita
@@ -80,14 +89,14 @@ function address_ride_check($db, $address_id): ?array
 
 function accepted_ride_list($db)
 {
-    $stmt_select = $db->prepare("SELECT * FROM rides_tb WHERE accepted_ride > '0'");
+    $stmt_select = $db->prepare("SELECT * FROM rides_tb WHERE accepted_ride > 0");
     $stmt_select->execute();
     return $stmt_select->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function caronas_cadastradas($db)
+function cancel_carpool($db, $cod_ride)
 {
-    $stmt_select = $db->prepare("SELECT * FROM rides_tb");
-    $stmt_select->execute();
-    return $stmt_select->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $db->prepare("UPDATE rides_tb SET status_ride = 0 WHERE cod_ride = :cod_ride");
+    $stmt->bindParam(':cod_ride', $cod_ride);
+    $stmt->execute();
 }

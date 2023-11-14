@@ -15,6 +15,7 @@ CREATE DATABASE IFcar;
 -- Create the rides table
 CREATE TABLE public.rides_tb (
     cod_ride serial NOT NULL,
+    status_ride integer NOT NULL DEFAULT 1,
     address_ride character varying(255) NOT NULL,
     time_ride time without time zone NOT NULL,
     accepted_ride integer NULL DEFAULT 0,

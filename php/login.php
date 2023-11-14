@@ -33,8 +33,8 @@ try {
     }
 
 } catch (PDOException $e) {
-    echo json_encode(array('success' => false, 'message' => "Erro na conexão: " . $e->getMessage()));
+    echo json_encode(array('success' => false, 'message' => 'Erro na conexão: ' . $e->getMessage()));
 } catch (Exception $e) {
-    echo json_encode(array('success' => false, 'message' => "Erro: " . $e->getMessage()));
+    echo json_encode(array('success' => false, 'message' => 'Erro: ' . $e->getMessage()));
 }
 ?>

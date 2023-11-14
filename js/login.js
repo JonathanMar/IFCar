@@ -6,42 +6,71 @@ document.addEventListener('DOMContentLoaded', function () {
     // Função para efetuar login
     function userLogin() {
         let formData = new FormData(document.getElementById('form_login'));
-        // console.log('Dados do formulário:', formData); // Debug
-
+    
         let xhrUserLogin = new XMLHttpRequest();
-
+    
         xhrUserLogin.open('POST', '../php/login.php', true);
-
+    
         xhrUserLogin.onload = function () {
             if (xhrUserLogin.status >= 200 && xhrUserLogin.status < 400) {
                 try {
                     let response = JSON.parse(xhrUserLogin.responseText);
+                    let messageContainer = document.getElementById('login-message');
+    
                     if (response.success) {
-                        alert('Login bem-sucedido!');
+                        messageContainer.innerHTML = "<p class='success-message'>Login realizado com sucesso!</p>";
+    
+                         // Acesso via AJAX, verificar JS não está sendo carregado
+                        //         let xhrIndexHtml = new XMLHttpRequest();
 
+                        //         xhrIndexHtml.open('GET', '../index.html', true);
+
+                        //         xhrIndexHtml.onload = function () {
+                        //             if (xhrIndexHtml.status >= 200 && xhrIndexHtml.status < 400) {
+                        //                 document.body.innerHTML = xhrIndexHtml.responseText;
+                        //             } else {
+                        //                 console.error('Erro ao carregar o arquivo index.html.');
+                        //             }
+                        //         };
+
+                        //         xhrIndexHtml.onerror = function () {
+                        //             console.error('Erro de conexão ao carregar o arquivo index.html.');
+                        //         };
+
+                        //         xhrIndexHtml.send();
+                        //     } else {
+                        //         alert('Usuário ou Senha Incorretos: ' + response.message);
+                        //     }
+                        // } catch (error) {
+                        //     console.error('Erro ao fazer parsing da resposta JSON:', error);
+                        // }
+
+                        window.location.href = '../index.html';
                     } else {
-                        alert('Usuário ou Senha Incorretos: ' + response.message);
+                        messageContainer.innerHTML = "<p class='error-message'>" + response.message + "</p>";
                     }
                 } catch (error) {
                     console.error('Erro ao fazer parsing da resposta JSON:', error);
                 }
             } else {
                 console.error('Erro ao efetuar login.');
-                console.log(xhrUserLogin.responseText); // Debug
+                console.log(xhrUserLogin.responseText);
             }
+    
+            document.getElementById('form_login').reset();
         };
-
+    
         xhrUserLogin.onerror = function () {
             console.error('Erro de conexão ao efetuar login.');
-            console.log(xhrUserLogin.responseText); // Debug
+            console.log(xhrUserLogin.responseText);
+            document.getElementById('form_login').reset();
         };
-
+    
         xhrUserLogin.send(formData);
         console.log('Enviando requisição...'); // Debug
-        console.log(formData); //Debug
-
-        document.getElementById('form_login').reset();
+        console.log(formData); // Debug
     }
+    
 
     // Função Relembrar Senha
     function rememberPwd() {
@@ -82,8 +111,6 @@ document.addEventListener('DOMContentLoaded', function () {
         };
 
         xhrCreateAccount.send(formData);
-        // console.log('Enviando requisição...'); // Debug
-        // console.log(formData); // Debug
 
 
         // Adiciona evento de clique ao botão "Voltar"
@@ -91,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Restaura o conteúdo original
             document.body.innerHTML = originalContent;
         });
-        
+
     }
 
     login_remember_pwdButton.addEventListener('click', rememberPwd);

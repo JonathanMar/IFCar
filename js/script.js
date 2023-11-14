@@ -5,6 +5,24 @@ document.addEventListener('DOMContentLoaded', function () {
   let caronaAceitaCaronaButton = document.getElementById('carrona_aceita');
   let caronaCadastradasButton = document.getElementById('carnas_cadastradas');
 
+
+  // Controle Sessões
+  window.addEventListener('beforeunload', function () {
+    // Faz uma requisição para destruir a sessão
+    fetch('php/destroy_session.php', { credentials: 'include' })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          console.log('Sessão destruída com sucesso.');
+        } else {
+          console.error('Erro ao destruir a sessão.');
+        }
+      })
+      .catch(error => {
+        console.error('Erro ao destruir a sessão.', error);
+      });
+  });
+
   // Função para Mudar Visibilidade dos Botões.
   function visibilidadeBtn(tipo, ...botoes) {
     for (let botao of botoes) {
@@ -14,10 +32,31 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   };
 
+
   // Função para Botão Voltar
   function voltarButton(cont) {
     document.getElementById(cont).innerHTML = '';
   };
+
+  // Função para carregar o formulário de cadastro
+  function carregarFormularioCadastro() {
+    let xhrDarCarona = new XMLHttpRequest();
+    xhrDarCarona.open('GET', 'src/formulario_cadastro.html', true);
+
+    xhrDarCarona.onload = function () {
+      if (xhrDarCarona.status >= 200 && xhrDarCarona.status < 400) {
+        document.getElementById('formulario_cad').innerHTML = xhrDarCarona.responseText;
+      } else {
+        console.error('Erro ao carregar o formulário de cadastro.');
+      }
+    };
+
+    xhrDarCarona.onerror = function () {
+      console.error('Erro de conexão ao carregar o formulário de cadastro.');
+    };
+
+    xhrDarCarona.send();
+  }
 
   // Função para dar carona
   function darCarona() {
@@ -274,55 +313,122 @@ document.addEventListener('DOMContentLoaded', function () {
     caronaInterval = setInterval(atualizarCaronas, 2000);
   }
 
-  // Função Botão Lista Caronas
+  // Função Caronas Cadastradas
   function caronaCadstradas() {
     visibilidadeBtn('none', darCaronaButton, pegarCaronaButton, caronaAceitaCaronaButton, caronaCadastradasButton);
 
     function atualizarCaronas() {
       let xhrCaronaCadastrada = new XMLHttpRequest();
-      xhrCaronaCadastrada.open('GET', 'php/caronas_cadastradas.php', true)
+      xhrCaronaCadastrada.open('GET', 'php/caronas_cadastradas.php', true);
 
       xhrCaronaCadastrada.onload = function () {
         if (xhrCaronaCadastrada.status >= 200 && xhrCaronaCadastrada.status < 400) {
+          document.getElementById('lista_carona').innerHTML = '';
           document.getElementById('lista_carona').innerHTML = xhrCaronaCadastrada.responseText;
 
-          document.getElementById('btn_edit').addEventListener('click', function () {
-            let xhrEditButton = new XMLHttpRequest();
-            xhrEditButton.open('POST', 'php/editar_caronas.php', true)
+          // Botão Editar Carona
+          let btnEdit = document.getElementById('btn_edit');
+          if (btnEdit) {
+            btnEdit.addEventListener('click', function () {
+              let idDoRegistro = this.dataset.id;
 
-            xhrEditButton.onload = function () {
-              if (xhrEditButton.status >= 200 && xhrEditButton.status < 400) {
+              // Defina a variável detalhesCarona
+              let detalhesCarona;
 
-              } else {
-                console.error('Erro Interno!')
-              }
-            };
+              let xhrEditButton = new XMLHttpRequest();
+              carregarFormularioCadastro(idDoRegistro);
 
-            xhrEditButton.onerror = function () {
-              console.error('Erro Interno!');
-            };
+              xhrEditButton.open('POST', 'php/editar_caronas.php', true);
 
-            xhrEditButton.send('cod_ride=' + encodeURIComponent(idDoRegistro));
-          });
+              xhrEditButton.onload = function () {
+                if (xhrEditButton.status >= 200 && xhrEditButton.status < 400) {
+                  console.log('Resposta JSON:', xhrEditButton.responseText); // Adicionado para depuração
 
-          document.getElementById('btn_cancel').addEventListener('click', function () {
-            let xhrCancelButton = new XMLHttpRequest();
-            xhrCancelButton.open('POST', 'php/cancelar_cad_caronas.php', true)
+                  try {
+                    // Tentativa de analisar a resposta como JSON
+                    detalhesCarona = JSON.parse(xhrEditButton.responseText);
 
-            xhrEditButton.onload = function () {
-              if (xhrCaronaCadastrada.status >= 200 && xhrCaronaCadastrada.status < 400) {
+                    console.log('Detalhes da carona:', detalhesCarona); // Adicionado para depuração
 
-              } else {
-                console.error('Erro Interno!')
-              }
-            };
+                    // Verifica se os dados estão presentes na resposta
+                    if (detalhesCarona && detalhesCarona.address_ride && detalhesCarona.time_ride && detalhesCarona.max_quant_ride) {
+                      // Preencher o formulário com as informações obtidas
+                      document.getElementById('address_ride').value = detalhesCarona.address_ride;
+                      document.getElementById('time_ride').value = detalhesCarona.time_ride;
+                      document.getElementById('max_quant_ride').value = detalhesCarona.max_quant_ride;
 
-            xhrEditButton.onerror = function () {
-              console.error('Erro Interno!');
-            };
+                      document.getElementById('formulario_cad').style.display = 'block';
+                    } else {
+                      console.error('Dados ausentes na resposta JSON.');
+                    }
+                  } catch (e) {
+                    console.error('Erro ao processar a resposta JSON:', e);
+                  }
+                } else {
+                  console.error('Erro Interno!');
+                }
+              };
 
-            xhrEditButton.send('cod_ride=' + encodeURIComponent(idDoRegistro));
-          });
+              xhrEditButton.onload = function () {
+                if (xhrEditButton.status >= 200 && xhrEditButton.status < 400) {
+                  console.log('Resposta JSON:', xhrEditButton.responseText);
+
+                  try {
+                    // Tentativa de analisar a resposta como JSON
+                    let response = JSON.parse(xhrEditButton.responseText);
+
+                    // Verifica se há um erro na resposta
+                    if (response.error) {
+                      console.error('Erro na solicitação:', response.error);
+                    } else {
+                      // Verifica se os dados estão presentes na resposta
+                      if (response.address_ride && response.time_ride && response.max_quant_ride) {
+                        // Preencher o formulário com as informações obtidas
+                        document.getElementById('address_ride').value = response.address_ride;
+                        document.getElementById('time_ride').value = response.time_ride;
+                        document.getElementById('max_quant_ride').value = response.max_quant_ride;
+
+                        document.getElementById('formulario_cad').style.display = 'block';
+                      } else {
+                        console.error('Dados ausentes na resposta JSON.');
+                      }
+                    }
+                  } catch (e) {
+                    console.error('Erro ao processar a resposta JSON:', e);
+                  }
+                } else {
+                  console.error('Erro Interno!');
+                }
+              };
+
+              xhrEditButton.send('cod_ride=' + encodeURIComponent(idDoRegistro));
+            });
+          }
+
+          // Botão Cancelar Carona
+          let btnCancel = document.getElementById('btn_cancel');
+          if (btnCancel) {
+            btnCancel.addEventListener('click', function () {
+              let idDoRegistro = this.dataset.id;
+              let xhrCancelButton = new XMLHttpRequest();
+              xhrCancelButton.open('POST', 'php/cancelar_cad_caronas.php', true);
+
+              xhrCancelButton.onload = function () {
+                if (xhrCancelButton.status >= 200 && xhrCancelButton.status < 400) {
+                  console.log('Carona cancelada com sucesso!');
+                } else {
+                  console.error('Erro Interno!');
+                }
+              };
+
+              xhrCancelButton.onerror = function () {
+                console.error('Erro Interno!');
+              };
+
+
+              xhrCancelButton.send('cod_ride=' + encodeURIComponent(idDoRegistro));
+            });
+          }
 
           // Adiciona evento de clique ao botão "Voltar"
           document.getElementById('voltar').addEventListener('click', function () {
@@ -336,14 +442,14 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
           console.error('Erro ao carregar a lista de caronas.');
         }
-      }
+      };
 
       xhrCaronaCadastrada.onerror = function () {
         console.error('Erro de conexão ao atualizar o registro.');
       };
 
       xhrCaronaCadastrada.send();
-    };
+    }
 
     // Chama a função para atualizar a lista de caronas imediatamente
     atualizarCaronas();

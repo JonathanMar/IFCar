@@ -45,6 +45,48 @@ input[type="number"] {
     padding: 20px;
 }
 
+.success-message {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    border-radius: 50px;
+    background-color: #4CAF50;
+    color: #ffffff;
+    margin: 3.5px 0 0 0;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+    
+.success-message:hover {
+    background-color: #45a049;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.error-message {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    border-radius: 50px;
+    background-color: #FF0000;
+    color: #ffffff;
+    margin: 3.5px 0 0 0;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+
+.error-message:hover {
+    background-color: #b30000;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 .title {
     text-align: center;
     color: white;
@@ -92,7 +134,6 @@ input[type="number"] {
     cursor: pointer;
     border: none;
     border-radius: 50px;
-    /* Agora os botões são redondos */
     background-color: #4CAF50;
     color: #ffffff;
     margin: 3.5px 0 0 0;
@@ -196,7 +237,7 @@ input[type="number"] {
     font-size: 17px;
     border-radius: 10px;
     text-align: center;
-    animation: bounceIn 0.8s; 
+    animation: bounceIn 0.8s;
 }
 
 #mensagem_exist_error {
@@ -207,7 +248,7 @@ input[type="number"] {
     font-size: 17px;
     border-radius: 10px;
     text-align: center;
-    animation: bounceIn 0.8s; 
+    animation: bounceIn 0.8s;
 }
 
 @keyframes bounceIn {
@@ -215,6 +256,7 @@ input[type="number"] {
         transform: scale(0.8);
         opacity: 0;
     }
+
     100% {
         transform: scale(1);
         opacity: 1;
@@ -225,7 +267,7 @@ input[type="number"] {
     padding: 10px 0 10px 0;
 }
 
-.cont p{
+.cont p {
     padding-bottom: 10px;
 }
 
@@ -234,7 +276,7 @@ input[type="number"] {
     color: #000000;
 }
 
-.login_create_acount a:hover{
+.login_create_acount a:hover {
     text-decoration: none;
     color: #000000;
     transform: translateY(-3px);
