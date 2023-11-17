@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 try {
     include('connection.php');
     include('queries.php');
@@ -17,6 +19,10 @@ try {
                 if (!empty($hash_password_user)) {
                     // Verifique se a senha fornecida corresponde ao hash
                     if (password_verify($password_user, $hash_password_user)) {
+                        $usuarioAutenticado = true;
+                        
+                        $_SESSION['user_id'] = $email_user;
+
                         echo json_encode(array('success' => true));
                     } else {
                         echo json_encode(array('success' => false, 'message' => 'Senha incorreta'));

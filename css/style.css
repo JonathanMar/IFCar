@@ -151,6 +151,10 @@ input[type="number"] {
     margin: 5px 0 0 5px;
 }
 
+#btn_register {
+    cursor: pointer;
+}
+
 .carona-item {
     background-color: rgba(255, 255, 255, 0.8);
     border: 2px solid #4CAF50;

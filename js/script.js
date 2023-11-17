@@ -1,73 +1,31 @@
+import { verificarSessao } from './verificarSessao.js';
+import { visibilidadeBtn } from './visibilidadeBtn.js';
+import { voltarButton } from './voltarButton.js';
+import { carregarFormularioCadastro } from './carregarFormularioCadastro.js';
+
+verificarSessao();
+
 document.addEventListener('DOMContentLoaded', function () {
   let caronaInterval;
   let pegarCaronaButton = document.getElementById('pegar_carona');
   let darCaronaButton = document.getElementById('dar_carona');
   let caronaAceitaCaronaButton = document.getElementById('carrona_aceita');
   let caronaCadastradasButton = document.getElementById('carnas_cadastradas');
-
-
-  // Controle Sessões
-  window.addEventListener('beforeunload', function () {
-    // Faz uma requisição para destruir a sessão
-    fetch('php/destroy_session.php', { credentials: 'include' })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          console.log('Sessão destruída com sucesso.');
-        } else {
-          console.error('Erro ao destruir a sessão.');
-        }
-      })
-      .catch(error => {
-        console.error('Erro ao destruir a sessão.', error);
-      });
-  });
-
-  // Função para Mudar Visibilidade dos Botões.
-  function visibilidadeBtn(tipo, ...botoes) {
-    for (let botao of botoes) {
-      if (botao) {
-        botao.style.display = tipo;
-      }
-    }
-  };
-
-
-  // Função para Botão Voltar
-  function voltarButton(cont) {
-    document.getElementById(cont).innerHTML = '';
-  };
-
-  // Função para carregar o formulário de cadastro
-  function carregarFormularioCadastro() {
-    let xhrDarCarona = new XMLHttpRequest();
-    xhrDarCarona.open('GET', 'src/formulario_cadastro.html', true);
-
-    xhrDarCarona.onload = function () {
-      if (xhrDarCarona.status >= 200 && xhrDarCarona.status < 400) {
-        document.getElementById('formulario_cad').innerHTML = xhrDarCarona.responseText;
-      } else {
-        console.error('Erro ao carregar o formulário de cadastro.');
-      }
-    };
-
-    xhrDarCarona.onerror = function () {
-      console.error('Erro de conexão ao carregar o formulário de cadastro.');
-    };
-
-    xhrDarCarona.send();
-  }
+  let sairButton = document.getElementById('sair');
 
   // Função para dar carona
   function darCarona() {
-    visibilidadeBtn('none', pegarCaronaButton, caronaAceitaCaronaButton, caronaCadastradasButton);
+    visibilidadeBtn('none', pegarCaronaButton, caronaAceitaCaronaButton, caronaCadastradasButton, sairButton);
 
-    let xhrDarCarona = new XMLHttpRequest();
-    xhrDarCarona.open('GET', 'src/formulario_cadastro.html', true);
-
-    xhrDarCarona.onload = function () {
-      if (xhrDarCarona.status >= 200 && xhrDarCarona.status < 400) {
-        document.getElementById('formulario_cad').innerHTML = xhrDarCarona.responseText;
+    fetch('src/formulario_cadastro.html')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Erro ao carregar o formulário. Motivo: ' + response.statusText);
+        }
+        return response.text();
+      })
+      .then(html => {
+        document.getElementById('formulario_cad').innerHTML = html;
 
         // Seleção de endereços
         // document.getElementById('address_ride_select').addEventListener('', function (event) {
@@ -116,42 +74,35 @@ document.addEventListener('DOMContentLoaded', function () {
 
           let formData = new FormData(this);
 
-          let xhrCadastro = new XMLHttpRequest();
-
           // Obtém a data atual do navegador
           let date_ride = new Date();
           formData.append('date_ride', date_ride.toISOString());
 
-          xhrCadastro.open('POST', 'php/cadastra_carona.php', true);
-
-          xhrCadastro.onload = function () {
-            if (xhrCadastro.status >= 200 && xhrCadastro.status < 400) {
-
-            } else {
-              console.error('Erro ao cadastrar a carona.');
-            }
-          };
-
-          xhrCadastro.onerror = function () {
-            console.error('Erro de conexão ao cadastrar a carona.');
-          };
-
-          xhrCadastro.send(formData);
+          fetch('php/cadastra_carona.php', {
+            method: 'POST',
+            body: formData
+          })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Erro ao cadastrar a carona.');
+              }
+            })
+            .catch(error => {
+              console.error('Erro ao cadastrar a carona:', error);
+            });
 
           // Após o cadastro ser concluído com sucesso, exibe a mensagem
           var mensagemDiv = document.querySelector('.result');
           mensagemDiv.innerHTML = '';
 
-          var xhr = new XMLHttpRequest();
-          xhr.open('GET', 'src/msg_coorrect.html', true);
-
-          xhr.onload = function () {
-            if (xhr.status === 200) {
-              mensagemDiv.innerHTML = xhr.responseText;
-            }
-          };
-
-          xhr.send();
+          fetch('src/msg_coorrect.html')
+            .then(response => response.text())
+            .then(html => {
+              mensagemDiv.innerHTML = html;
+            })
+            .catch(error => {
+              throw new Error('Erro ao processar a resposta HTML:', error);
+            });
 
           this.reset();
         });
@@ -160,24 +111,18 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('voltar_CadUse').addEventListener('click', function () {
           voltarButton('formulario_cad');
 
-          visibilidadeBtn('block', pegarCaronaButton, darCaronaButton, caronaAceitaCaronaButton, caronaCadastradasButton);
+          visibilidadeBtn('block', pegarCaronaButton, darCaronaButton, caronaAceitaCaronaButton, caronaCadastradasButton, sairButton);
         });
-
-      } else {
-        console.error('Erro ao carregar o formulário. Motivo: ' + xhrDarCarona.statusText);
-      }
-    };
-
-    xhrDarCarona.onerror = function () {
-      console.error('Erro de conexão.');
-    };
-
-    xhrDarCarona.send();
+      })
+      .catch(error => {
+        console.error('Erro ao carregar o formulário:', error);
+      });
   }
 
   // Função para pegar carona
   function pegarCarona() {
-    visibilidadeBtn('none', darCaronaButton, caronaAceitaCaronaButton, caronaCadastradasButton);
+    let caronaInterval;
+    visibilidadeBtn('none', darCaronaButton, caronaAceitaCaronaButton, caronaCadastradasButton, sairButton);
 
     function atualizarCaronas() {
       let xhrPegarCarona = new XMLHttpRequest();
@@ -221,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Cancela o intervalo de atualização
             clearInterval(caronaInterval);
 
-            visibilidadeBtn('block', darCaronaButton, caronaAceitaCaronaButton, caronaCadastradasButton);
+            visibilidadeBtn('block', darCaronaButton, caronaAceitaCaronaButton, caronaCadastradasButton, sairButton);
           });
 
         } else {
@@ -245,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function caronaAceita() {
     // Exibe Botões
-    visibilidadeBtn('none', darCaronaButton, pegarCaronaButton, caronaCadastradasButton);
+    visibilidadeBtn('none', darCaronaButton, pegarCaronaButton, caronaCadastradasButton, sairButton);
 
     function atualizarCaronas() {
       let xhrPegarCarona = new XMLHttpRequest();
@@ -315,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Função Caronas Cadastradas
   function caronaCadstradas() {
-    visibilidadeBtn('none', darCaronaButton, pegarCaronaButton, caronaAceitaCaronaButton, caronaCadastradasButton);
+    visibilidadeBtn('none', darCaronaButton, pegarCaronaButton, caronaAceitaCaronaButton, caronaCadastradasButton, sairButton);
 
     function atualizarCaronas() {
       let xhrCaronaCadastrada = new XMLHttpRequest();
@@ -323,7 +268,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
       xhrCaronaCadastrada.onload = function () {
         if (xhrCaronaCadastrada.status >= 200 && xhrCaronaCadastrada.status < 400) {
-          document.getElementById('lista_carona').innerHTML = '';
           document.getElementById('lista_carona').innerHTML = xhrCaronaCadastrada.responseText;
 
           // Botão Editar Carona
@@ -331,35 +275,50 @@ document.addEventListener('DOMContentLoaded', function () {
           if (btnEdit) {
             btnEdit.addEventListener('click', function () {
               let idDoRegistro = this.dataset.id;
-
+              console.log(idDoRegistro);
               // Defina a variável detalhesCarona
               let detalhesCarona;
 
-              let xhrEditButton = new XMLHttpRequest();
-              carregarFormularioCadastro(idDoRegistro);
+              let xhrPegarCarona = new XMLHttpRequest();
+              let xhrDarCarona = new XMLHttpRequest();
+              xhrDarCarona.open('GET', 'src/formulario_cadastro.html', true);
 
-              xhrEditButton.open('POST', 'php/editar_caronas.php', true);
+              xhrDarCarona.onload = function () {
+                if (xhrDarCarona.status >= 200 && xhrDarCarona.status < 400) {
+                  document.getElementById('formulario_cad').innerHTML = xhrDarCarona.responseText;
+                } else {
+                  console.error('Erro ao carregar o formulário de cadastro.');
+                }
+              };
 
-              xhrEditButton.onload = function () {
-                if (xhrEditButton.status >= 200 && xhrEditButton.status < 400) {
-                  console.log('Resposta JSON:', xhrEditButton.responseText); // Adicionado para depuração
+              xhrDarCarona.onerror = function () {
+                console.error('Erro de conexão ao carregar o formulário de cadastro.');
+              };
 
+              xhrDarCarona.send();
+
+              xhrPegarCarona.open('POST', 'php/editar_caronas.php', true);
+
+              document.getElementById('lista_carona').style.display = 'none';
+              document.getElementById('formulario_cad').style.display = 'block';
+
+              clearInterval(caronaInterval);
+
+              xhrPegarCarona.onload = function () {
+                if (xhrPegarCarona.status >= 200 && xhrPegarCarona.status < 400) {
                   try {
-                    // Tentativa de analisar a resposta como JSON
-                    detalhesCarona = JSON.parse(xhrEditButton.responseText);
-
-                    console.log('Detalhes da carona:', detalhesCarona); // Adicionado para depuração
+                    let detalhesCarona = JSON.parse(xhrPegarCarona.responseText);
 
                     // Verifica se os dados estão presentes na resposta
-                    if (detalhesCarona && detalhesCarona.address_ride && detalhesCarona.time_ride && detalhesCarona.max_quant_ride) {
+                    if (detalhesCarona) {
                       // Preencher o formulário com as informações obtidas
-                      document.getElementById('address_ride').value = detalhesCarona.address_ride;
-                      document.getElementById('time_ride').value = detalhesCarona.time_ride;
-                      document.getElementById('max_quant_ride').value = detalhesCarona.max_quant_ride;
+                      document.getElementById('address_ride').value = detalhesCarona.address_ride || '';
+                      document.getElementById('time_ride').value = detalhesCarona.time_ride || '';
+                      document.getElementById('max_quant_ride').value = detalhesCarona.max_quant_ride || '';
 
                       document.getElementById('formulario_cad').style.display = 'block';
                     } else {
-                      console.error('Dados ausentes na resposta JSON.');
+                      console.error('Dados ausentes na resposta JSON ou estrutura incorreta.');
                     }
                   } catch (e) {
                     console.error('Erro ao processar a resposta JSON:', e);
@@ -369,41 +328,24 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
               };
 
-              xhrEditButton.onload = function () {
-                if (xhrEditButton.status >= 200 && xhrEditButton.status < 400) {
-                  console.log('Resposta JSON:', xhrEditButton.responseText);
+              console.log('Resposta da solicitação:', xhrPegarCarona.responseText);
+              console.log('Detalhes da carona:', detalhesCarona);
 
-                  try {
-                    // Tentativa de analisar a resposta como JSON
-                    let response = JSON.parse(xhrEditButton.responseText);
+              // Antes de enviar a solicitação
+              console.log('Enviando solicitação com cod_ride:', idDoRegistro);
 
-                    // Verifica se há um erro na resposta
-                    if (response.error) {
-                      console.error('Erro na solicitação:', response.error);
-                    } else {
-                      // Verifica se os dados estão presentes na resposta
-                      if (response.address_ride && response.time_ride && response.max_quant_ride) {
-                        // Preencher o formulário com as informações obtidas
-                        document.getElementById('address_ride').value = response.address_ride;
-                        document.getElementById('time_ride').value = response.time_ride;
-                        document.getElementById('max_quant_ride').value = response.max_quant_ride;
-
-                        document.getElementById('formulario_cad').style.display = 'block';
-                      } else {
-                        console.error('Dados ausentes na resposta JSON.');
-                      }
-                    }
-                  } catch (e) {
-                    console.error('Erro ao processar a resposta JSON:', e);
-                  }
-                } else {
-                  console.error('Erro Interno!');
-                }
-              };
-
-              xhrEditButton.send('cod_ride=' + encodeURIComponent(idDoRegistro));
+              xhrPegarCarona.send('cod_ride=' + encodeURIComponent(idDoRegistro));
             });
           }
+          // // Adiciona evento de clique ao botão "Voltar" dentro desta função
+          // document.getElementById('voltar_CadUse').addEventListener('click', function () {
+          //   voltarButton('lista_carona');
+
+          //   // Cancela o intervalo de atualização
+          //   clearInterval(caronaInterval);
+
+          //   visibilidadeBtn('block', darCaronaButton, pegarCaronaButton, caronaAceitaCaronaButton, caronaCadastradasButton);
+          // });
 
           // Botão Cancelar Carona
           let btnCancel = document.getElementById('btn_cancel');
@@ -430,15 +372,16 @@ document.addEventListener('DOMContentLoaded', function () {
             });
           }
 
-          // Adiciona evento de clique ao botão "Voltar"
+          // Adiciona evento de clique ao botão "Voltar" dentro desta função
           document.getElementById('voltar').addEventListener('click', function () {
             voltarButton('lista_carona');
 
             // Cancela o intervalo de atualização
             clearInterval(caronaInterval);
 
-            visibilidadeBtn('block', darCaronaButton, pegarCaronaButton, caronaAceitaCaronaButton, caronaCadastradasButton);
+            visibilidadeBtn('block', darCaronaButton, pegarCaronaButton, caronaAceitaCaronaButton, caronaCadastradasButton, sairButton);
           });
+
         } else {
           console.error('Erro ao carregar a lista de caronas.');
         }
@@ -458,9 +401,48 @@ document.addEventListener('DOMContentLoaded', function () {
     caronaInterval = setInterval(atualizarCaronas, 2000);
   }
 
+  function sair() {
+    // Chama a função para destruir a sessão
+    function destroySession() {
+      // Faz uma requisição para destruir a sessão usando fetch
+      return fetch('php/destroy_session.php', { credentials: 'include' })
+        .then(response => response.json());
+    }
+
+    destroySession()
+      .then(data => {
+        if (data.success) {
+          console.log('Sessão destruída com sucesso.');
+          // Redireciona o usuário para a página de login (ou outra página desejada)
+          window.location.href = '../src/login.html';
+        } else {
+          console.error('Erro ao destruir a sessão.');
+        }
+      })
+      .catch(error => {
+        console.error('Erro ao destruir a sessão.', error);
+      });
+  }
+  // Controle Sessões
+  window.addEventListener('beforeunload', function () {
+    // Faz uma requisição para destruir a sessão
+    destroySession()
+      .then(data => {
+        if (data.success) {
+          console.log('Sessão destruída com sucesso.');
+        } else {
+          console.error('Erro ao destruir a sessão.');
+        }
+      })
+      .catch(error => {
+        console.error('Erro ao destruir a sessão.', error);
+      });
+  });
+
   // Adiciona eventos aos botões
   darCaronaButton.addEventListener('click', darCarona);
   pegarCaronaButton.addEventListener('click', pegarCarona);
   caronaAceitaCaronaButton.addEventListener('click', caronaAceita);
   caronaCadastradasButton.addEventListener('click', caronaCadstradas);
+  sairButton.addEventListener('click', sair);
 });
