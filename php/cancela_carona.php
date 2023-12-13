@@ -6,12 +6,12 @@ try {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $cod_ride = $_POST["cod_ride"];
     
-        $result = getAllRides($db);
+        $result = getAllRides($conn);
 
         if ($result) {
             foreach ($result as $row) {
                 $accepted_ride = $row['accepted_ride'] - 1;
-                updateAcceptedRide($db, $accepted_ride, $cod_ride); 
+                updateAcceptedRide($conn, $accepted_ride, $cod_ride); 
             }
         } else {
             echo "Registro não encontrado.";

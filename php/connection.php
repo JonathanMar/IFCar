@@ -1,13 +1,17 @@
 <?php
 $host = 'localhost';
-$dbname = 'IFcar';
+$connname = 'IFcar';
 $user = 'postgres';
 $password = '1234567';
 
-try {
-    $db = new PDO("pgsql:host=$host;dbname=$dbname;user=$user;password=$password");
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    echo "Erro na conexão: " . $e->getMessage();
+// Conectar ao banco de dados
+$conn = new mysqli($host, $user, $password, $connname);
+
+// Verificar a conexão
+if ($conn->connect_error) {
+    die("Erro na conexão: " . $conn->connect_error);
 }
+
+// Definir o modo de erro para lançar exceções em caso de erros
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 ?>

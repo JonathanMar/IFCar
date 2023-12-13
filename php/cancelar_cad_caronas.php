@@ -4,14 +4,17 @@ try {
     include('queries.php');
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $cod_ride = $_POST["cod_ride"];
-        $result = getAllRides($db);
+        if (isset($_POST["cod_ride"])) {
+            $cod_ride = $_POST["cod_ride"];
+            $result = cancel_carpool($conn, $cod_ride); // Alteração aqui
 
-        if ($result) {
-            cancel_carpool($db, $cod_ride);
-            echo "Carona cancelada com sucesso.";
+            if ($result) {
+                echo "Carona cancelada com sucesso.";
+            } else {
+                echo "Erro ao cancelar a carona.";
+            }
         } else {
-            echo "Registro não encontrado.";
+            echo "Chave 'cod_ride' não está definida na requisição.";
         }
     }
 } catch (PDOException $e) {

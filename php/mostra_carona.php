@@ -3,7 +3,7 @@ try {
     include('connection.php');
     include('queries.php');
 
-    $result = getAllRides($db);
+    $result = getAllRides($conn);
 
     if ($result) {
         foreach ($result as $row) {

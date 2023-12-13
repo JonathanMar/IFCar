@@ -5,7 +5,7 @@ try {
     include('queries.php');
 
     // Verifica se a carona já existe
-    $result = accepted_ride_list($db);
+    $result = accepted_ride_list($conn);
 
     foreach ($result as $row) {
         echo "<div class='carona-item'>";
@@ -26,7 +26,7 @@ try {
     }
     
 
-        echo "<button id='voltar_pegCar' class='btn'>Voltar</button>";
+    echo "<button id='voltar_pegCar' class='btn'>Voltar</button>";
     echo "</div>";
 
 } catch (PDOException $e) {

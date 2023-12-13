@@ -6,7 +6,7 @@ try {
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cod_ride'])) {
         $cod_ride = $_POST['cod_ride'];  
     
-        $rideInfo = getRideInfo($db, $cod_ride);
+        $rideInfo = getRideInfo($conn, $cod_ride);
     
         if ($rideInfo) {
             header('Content-Type: application/json');

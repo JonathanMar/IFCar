@@ -1,3 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="IFCar" name="title">
+    <meta content="pt-br" name="language">
+
+    <!-- Information -->
+    <meta content="Index, Follow" name="keywords">
+    <meta content="Site para carona entre os dicentes e docentes do IFSULDEMINAS.">
+
+    <!-- Viewport -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Icons -->
+    <link rel="shortcut icon" href="../img/logo.png" type="image/x-icon">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+
+    <!-- JS -->
+    <script src="../js/register.js"></script>
+
+    <!-- API -->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+    <title>IFCar - Register</title>
+</head>
+
 <body>
     <div class="container">
         <div class="login">
@@ -8,37 +39,32 @@
 
                 <div class="input-box">
                     <div class="input-box-op">
-                        <label for="name_user"> Nome de Usuário </label> 
-                        <input type="text" name="name_user" id="name_user"
-                            minlength="8" maxlength="50" required _lpchecked="1">
+                        <label for="name_user"> Nome de Usuário </label>
+                        <input type="text" name="name_user" id="name_user" minlength="8" maxlength="50">
                     </div>
                     <div class="input-box-op">
-                        <label for="email_user"> E-mail </label> 
-                        <input type="email" name="email_user" id="email_user" required _lpchecked="1">
+                        <label for="email_user"> E-mail </label>
+                        <input type="email" name="email_user" id="email_user">
                     </div>
                     <div class="input-box-op">
-                        <label for="car_model_user"> Modelo do Veículo </label> 
-                        <input type="text" name="car_model_user" id="car_model_user" required _lpchecked="1">
+                        <label for="car_model_user"> Modelo do Veículo </label>
+                        <input type="text" name="car_model_user" id="car_model_user">
                     </div>
                     <div class="input-box-op">
-                        <label for="password_user"> Senha </label> <input type="password" name="password_user"
-                            id="password_user" minlength="8" required _lpchecked="1">
+                        <label for="password_user"> Senha </label>
+                        <input type="password" name="password_user" id="password_user" minlength="8" autocomplete="off">
                     </div>
                 </div>
+
                 <div id="result"></div>
+
                 <div class="button">
                     <input type="button" id="btn_createAcount" class="btn" value="Criar Conta">
                     <button type="button" id="voltar_btn" class="btn">Voltar</button>
                 </div>
-                
-
-                </div>
-
-                <!-- Login via google API OAuth2 - Em produção -->
-                <!-- <div class="button">
-                    <div class="g-signin2" data-onsuccess="onSignIn"></div>
-                </div>                 -->
-
             </form>
         </div>
     </div>
+</body>
+
+</html>

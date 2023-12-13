@@ -1,8 +1,11 @@
 <?php
+header('Content-Type: application/json'); // Define o tipo de conteúdo como JSON
 
 try {
     include('connection.php');
     include('queries.php');
+
+    $response = array(); // Inicializa a resposta como um array vazio
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $address_ride = $_POST['address_ride'];
@@ -10,20 +13,30 @@ try {
         $max_quant_ride = $_POST['max_quant_ride'];
         $date_ride = $_POST['date_ride'];
 
-        // Verifica se a carona já existe
-        $result = checkIfRideExists($db, $address_ride, $time_ride, $max_quant_ride, $date_ride);
+        if (!empty($address_ride) && !empty($time_ride) && !empty($max_quant_ride) && !empty($date_ride)) {
+            // Verifica se a carona já existe
+            $result = checkIfRideExists($conn, $address_ride, $time_ride, $max_quant_ride);
 
-        if ($result) {
-            echo "Esta carona já existe.";
+            if ($result) {
+                $response['error'] = 'Esta carona já existe.';
+            } else {
+                // Converte a data/hora para o formato aceito pelo MySQL
+                $formatted_date = date('Y-m-d H:i:s', strtotime($date_ride));
+                insertRide($conn, $address_ride, $time_ride, $max_quant_ride, $formatted_date);
+                $response['success'] = 'Carona cadastrada com sucesso!';
+            }
         } else {
-            // Insere a carona no banco de dados
-            insertRide($db, $address_ride, $time_ride, $max_quant_ride, $date_ride);
+            $response['error'] = 'Favor preencha todos os campos!';
         }
+    } else {
+        $response['error'] = 'Método de requisição inválido.';
     }
-
 } catch (PDOException $e) {
-    echo "Erro na conexão: " . $e->getMessage();
+    $response['error'] = 'Erro na conexão: ' . $e->getMessage();
 } catch (Exception $e) {
-    echo "Erro: " . $e->getMessage();
+    $response['error'] = 'Erro: ' . $e->getMessage();
 }
+
+// Envia a resposta como JSON para o JavaScript
+echo json_encode($response);
 ?>

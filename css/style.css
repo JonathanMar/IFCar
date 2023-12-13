@@ -23,7 +23,6 @@ input[type="text"],
 input[type="time"],
 input[type="number"] {
     border-radius: 20px;
-    /* Valor alto para arredondar bem os cantos */
     padding: 8px;
     border: none;
     box-sizing: border-box;
@@ -120,7 +119,6 @@ input[type="number"] {
     box-sizing: border-box;
 }
 
-
 .button {
     text-align: center;
 }
@@ -152,6 +150,10 @@ input[type="number"] {
 }
 
 #btn_register {
+    cursor: pointer;
+}
+
+#login_remember_pwd {
     cursor: pointer;
 }
 
@@ -278,11 +280,4 @@ input[type="number"] {
 .login_create_acount a {
     text-decoration: none;
     color: #000000;
-}
-
-.login_create_acount a:hover {
-    text-decoration: none;
-    color: #000000;
-    transform: translateY(-3px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }

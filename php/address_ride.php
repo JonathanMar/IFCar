@@ -8,7 +8,7 @@ try {
         $address_id = $_GET['address_id'];
 
         // Seleciona os endereços
-        $meeting_points = address_ride_check($db, $address_id);
+        $meeting_points = address_ride_check($conn, $address_id);
 
         echo json_encode($meeting_points);
         
